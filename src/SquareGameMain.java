@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,6 +22,8 @@ public class SquareGameMain extends JFrame {
     private final ButtonPanel buttonPanel;
 
     GameBoard gameBoard = new GameBoard(new MagicSquare[BOARD_VISUAL_SIZE][BOARD_VISUAL_SIZE]);
+    public Timer timer;
+
     public SquareGameMain() {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -46,6 +49,10 @@ public class SquareGameMain extends JFrame {
 
     private void initializeGame() {
         gameBoard.setStartingPositions(playerList);
+        this.timer = new Timer(20, e -> {
+            runRound();
+            repaint();
+        });
     }
 
     private void runTurns() {
@@ -58,10 +65,7 @@ public class SquareGameMain extends JFrame {
     }
 
     public void startGame() {
-        for (int i = 0; i < 2000; i ++) {
-            runRound();
-            repaint();
-        }
+        timer.start();
     }
 
     public void runRound() {
