@@ -1,4 +1,4 @@
-package squaregame;
+package squaregame.model;
 
 /**
  * Created by Russell on 5/5/18.

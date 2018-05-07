@@ -1,6 +1,7 @@
 package squaregame;
 
 import squaregame.model.GameState;
+import squaregame.view.ButtonPanel;
 import squaregame.view.GameBoardView;
 
 import javax.swing.JFrame;

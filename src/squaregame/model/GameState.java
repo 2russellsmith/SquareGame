@@ -1,6 +1,6 @@
 package squaregame.model;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,14 +33,14 @@ public class GameState {
         return "Round: " + roundNumber + "\n" + printScore();
     }
     public String printEndGame() {
-        return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).score)).get().name + " WINS THE GAME!!!";
+        return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).getScore())).get().name + " WINS THE GAME!!!";
     }
 
     public boolean someoneWon() {
-        return playerList.stream().filter(p -> scoreBoard.get(p).score > 0).count() < 2;
+        return playerList.stream().filter(p -> scoreBoard.get(p).getScore() > 0).count() < 2;
     }
 
     public String printScore() {
-        return playerList.stream().map(p -> p.name + ": " + scoreBoard.get(p).score).collect(Collectors.joining("\n"));
+        return playerList.stream().map(p -> p.name + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
     }
 }

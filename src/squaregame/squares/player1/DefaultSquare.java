@@ -1,12 +1,13 @@
 package squaregame.squares.player1;
 
-import squaregame.Action;
+import java.util.List;
+
 import squaregame.GameBoard;
 import squaregame.Player;
+import squaregame.model.Action;
+import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;
-
-import java.util.List;
 
 /**
  * Created by Russell on 5/5/18.
@@ -23,9 +24,9 @@ public class DefaultSquare extends SquareLogic {
     public SquareAction run(int row, int col, List<Player> view) {
 
         if (alive++ % 20 == 0) {
-            return new SquareAction(Action.REPLICATE, GameBoard.Direction.NE, this, new DefaultSquare(this.player));
+            return new SquareAction(Action.REPLICATE, Direction.NE, this, new DefaultSquare(this.player));
         } else {
-            return new SquareAction(Action.MOVE, GameBoard.Direction.SE, this, new DefaultSquare(this.player));
+            return new SquareAction(Action.MOVE, Direction.SE, this, new DefaultSquare(this.player));
         }
     }
 }

@@ -1,12 +1,14 @@
 package squaregame;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import squaregame.model.Direction;
 import squaregame.model.GameState;
+import squaregame.model.Location;
 import squaregame.model.Score;
 import squaregame.squares.SquareAction;
 
@@ -56,17 +58,17 @@ public class GameBoard {
 
     public Player getPlayer(int i, int j, Direction direction) {
         try {
-            return squares[mod((direction.xOffset + i), squares.length)][mod((direction.yOffset + j), squares.length)].player;
+            return squares[mod((direction.getxOffset() + i), squares.length)][mod((direction.getyOffset() + j), squares.length)].player;
         } catch (NullPointerException e) {
             return null;
         }
     }
 
     private void set(int i, int j, Direction direction, MagicSquare[][] squaresMatrix, MagicSquare magicSquare) {
-        squaresMatrix[mod((direction.xOffset + i), squaresMatrix.length)][mod((direction.yOffset + j), squaresMatrix.length)] = magicSquare;
+        squaresMatrix[mod((direction.getxOffset() + i), squaresMatrix.length)][mod((direction.getyOffset() + j), squaresMatrix.length)] = magicSquare;
     }
     private MagicSquare get(int i, int j, Direction direction, MagicSquare[][] squaresMatrix) {
-        return squaresMatrix[mod((direction.xOffset + i), squaresMatrix.length)][mod((direction.yOffset + j), squaresMatrix.length)];
+        return squaresMatrix[mod((direction.getxOffset() + i), squaresMatrix.length)][mod((direction.getyOffset() + j), squaresMatrix.length)];
     }
 
     public void runAllTurns() {
@@ -130,25 +132,9 @@ public class GameBoard {
         }
         gameState.scoreBoard = currentScore;
         squares = squaresNextTurn;
-        squareDeletes.forEach(location -> squares[location.x][location.y] = null);
+        squareDeletes.forEach(location -> squares[location.getX()][location.getY()] = null);
     }
-    public enum Direction {
-        NW(-1, -1),
-        N(0, -1),
-        NE(1, -1),
-        E(1, 0),
-        SE(1, 1),
-        S(0, 1),
-        SW(-1, 1),
-        W(-1, 0),
-        CENTER(0, 0);
-        final int xOffset;
-        final int yOffset;
-        Direction(int xOffset, int yOffset) {
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-        }
-    }
+
     public static int mod(int x, int y)
     {
         int result = x % y;
