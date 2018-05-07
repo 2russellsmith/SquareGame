@@ -21,21 +21,22 @@ public class SquareGameMain extends JFrame {
     private final JTextArea roundText;
     private GameState gameState;
 
-    public GameBoard gameBoard;
-    public Timer timer;
+    private GameBoard gameBoard;
+    private GameBoardView gameBoardView;
+    private Timer timer;
     private int round = 0;
 
     public SquareGameMain() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+        this.gameBoardView = new GameBoardView(this.gameBoard);
         resetGame();
-        JPanel gameBoardView = new GameBoardView(this);
-        roundText = new JTextArea(Integer.toString(round));
+        this.roundText = new JTextArea(Integer.toString(this.round));
         setTitle("SquareGame");
         this.buttonPanel = new ButtonPanel(this);
-        this.getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
-        this.getContentPane().add(gameBoardView, BorderLayout.CENTER);
-        this.getContentPane().add(roundText, BorderLayout.EAST);
+        this.getContentPane().add(this.buttonPanel, BorderLayout.PAGE_END);
+        this.getContentPane().add(this.gameBoardView, BorderLayout.CENTER);
+        this.getContentPane().add(this.roundText, BorderLayout.EAST);
         this.setSize(1000, 1000);
         initializeGame();
     }
@@ -58,7 +59,8 @@ public class SquareGameMain extends JFrame {
     }
 
     public void startGame() {
-        gameBoard.setStartingPositions(this.gameState.playerList);
+        this.resetGame();
+        this.gameBoard.setStartingPositions(this.gameState.getPlayerList());
         repaint();
         timer.start();
     }
@@ -66,10 +68,11 @@ public class SquareGameMain extends JFrame {
     public void runRound() {
         this.runTurns();
         this.roundText.setText(this.gameState.printGameState());
-        if (this.gameState.someoneWon() || this.gameState.roundNumber++ >= 100000) {
+        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 100000) {
             this.timer.stop();
             this.gameOver();
         }
+        this.gameState.nextRound();
         this.repaint();
     }
     public void gameOver() {
@@ -79,6 +82,11 @@ public class SquareGameMain extends JFrame {
     public void resetGame() {
         this.gameState = new GameState();
         this.gameBoard = new GameBoard(new MagicSquare[BOARD_VISUAL_SIZE][BOARD_VISUAL_SIZE], this.gameState);
+        this.gameBoardView.setGameBoard(this.gameBoard);
         this.repaint();
+    }
+
+    public Timer getTimer() {
+        return this.timer;
     }
 }

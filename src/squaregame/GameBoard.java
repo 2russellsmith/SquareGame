@@ -18,7 +18,7 @@ import squaregame.squares.SquareAction;
 public class GameBoard {
     private final GameState gameState;
     private MagicSquare[][] squares;
-    private final int INACTIVE_COUNT = 100;
+    private static final int INACTIVE_COUNT = 100;
 
     public GameBoard(MagicSquare[][] magicSquares, GameState gameState) {
         this.squares = magicSquares;
@@ -29,7 +29,7 @@ public class GameBoard {
         for (int i = 0; i < SquareGameMain.BOARD_SIZE; i++) {
             for (int j = 0; j < SquareGameMain.BOARD_SIZE; j++) {
                 if (squares[i][j] != null) {
-                    g2.setColor(squares[i][j].player.color);
+                    g2.setColor(squares[i][j].getPlayer().getColor());
                     g2.fillRect(i * SquareGameMain.SQUARE_SIZE, j * SquareGameMain.SQUARE_SIZE,
                             SquareGameMain.SQUARE_SIZE, SquareGameMain.SQUARE_SIZE);
                 }
@@ -39,12 +39,12 @@ public class GameBoard {
     public void setStartingPositions(List<Player> playerList) {
         playerList.forEach(p -> {
             squares[MiscUtilities.getRandomNumber(SquareGameMain.BOARD_SIZE)][MiscUtilities.getRandomNumber(SquareGameMain.BOARD_SIZE)] =
-                    new MagicSquare(p, p.startingLogic);
+                    new MagicSquare(p, p.getStartingLogic());
         });
     }
 
     public List<Player> getView(int i, int j) {
-        List<Player> view = new ArrayList<>();
+        final List<Player> view = new ArrayList<>();
         view.add(0, getPlayer(i, j, Direction.NW));
         view.add(1, getPlayer(i, j, Direction.N));
         view.add(2, getPlayer(i, j, Direction.NE));
@@ -58,7 +58,7 @@ public class GameBoard {
 
     public Player getPlayer(int i, int j, Direction direction) {
         try {
-            return squares[mod((direction.getxOffset() + i), squares.length)][mod((direction.getyOffset() + j), squares.length)].player;
+            return squares[mod((direction.getxOffset() + i), squares.length)][mod((direction.getyOffset() + j), squares.length)].getPlayer();
         } catch (NullPointerException e) {
             return null;
         }
@@ -72,56 +72,58 @@ public class GameBoard {
     }
 
     public void runAllTurns() {
-        MagicSquare[][] squaresNextTurn = new MagicSquare[SquareGameMain.BOARD_SIZE][SquareGameMain.BOARD_SIZE];
-        List<Location> squareDeletes = new ArrayList<>();
-        Map<Player, Score> currentScore = new HashMap<>();
-        this.gameState.playerList.forEach(p -> {
+        final MagicSquare[][] squaresNextTurn = new MagicSquare[SquareGameMain.BOARD_SIZE][SquareGameMain.BOARD_SIZE];
+        final List<Location> squareDeletes = new ArrayList<>();
+        final Map<Player, Score> currentScore = new HashMap<>();
+        this.gameState.getPlayerList().forEach(p -> {
             currentScore.put(p, new Score());
         });
         for (int i = 0; i < SquareGameMain.BOARD_SIZE; i++) {
             for (int j = 0; j < SquareGameMain.BOARD_SIZE; j++) {
                 if (squares[i][j] != null) {
-                    currentScore.get(squares[i][j].player).addPoint();
-                    if (squares[i][j].inactive > 0) {
+                    currentScore.get(squares[i][j].getPlayer()).addPoint();
+                    if (squares[i][j].getInactive() > 0) {
                         if (get(i, j, Direction.CENTER, squaresNextTurn) == null) {
-                            set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].player,
-                                    squares[i][j].squareLogic, (squares[i][j].inactive - 1)));
+                            set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(),
+                                    squares[i][j].getSquareLogic(), (squares[i][j].getInactive() - 1)));
                         } else {
                             squareDeletes.add(new Location(i, j, Direction.CENTER));
                         }
                     } else {
-                        SquareAction squareAction = squares[i][j].squareLogic.run(i, j, getView(i, j));
-                        switch (squareAction.action) {
+                        final SquareAction squareAction = squares[i][j].getSquareLogic().run(i, j, getView(i, j));
+                        switch (squareAction.getAction()) {
                             case ATTACK:
                                 if (get(i, j, Direction.CENTER, squaresNextTurn) == null) {
-                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].player, squareAction.squareLogic));
+                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(), squareAction.getSquareLogic()));
                                 } else {
                                     squareDeletes.add(new Location(i, j, Direction.CENTER));
                                 }
-                                squareDeletes.add(new Location(i, j, squareAction.direction));
+                                squareDeletes.add(new Location(i, j, squareAction.getDirection()));
                                 break;
                             case MOVE:
-                                if (get(i, j, squareAction.direction, squaresNextTurn) == null) {
-                                    set(i, j, squareAction.direction, squaresNextTurn, new MagicSquare(squares[i][j].player, squareAction.squareLogic));
+                                if (get(i, j, squareAction.getDirection(), squaresNextTurn) == null) {
+                                    set(i, j, squareAction.getDirection(), squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(),
+                                            squareAction.getSquareLogic()));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, squareAction.direction));
+                                    squareDeletes.add(new Location(i, j, squareAction.getDirection()));
                                 }
                                 break;
                             case REPLICATE:
-                                if (get(i, j, squareAction.direction, squaresNextTurn) == null) {
-                                    set(i, j, squareAction.direction, squaresNextTurn, new MagicSquare(squares[i][j].player, squareAction.replicated, INACTIVE_COUNT));
+                                if (get(i, j, squareAction.getDirection(), squaresNextTurn) == null) {
+                                    set(i, j, squareAction.getDirection(), squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(),
+                                            squareAction.getReplicated(), INACTIVE_COUNT));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, squareAction.direction));
+                                    squareDeletes.add(new Location(i, j, squareAction.getDirection()));
                                 }
                                 if (get(i, j, Direction.CENTER, squaresNextTurn) == null) {
-                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].player, squareAction.squareLogic, INACTIVE_COUNT));
+                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(), squareAction.getSquareLogic(), INACTIVE_COUNT));
                                 } else {
                                     squareDeletes.add(new Location(i, j, Direction.CENTER));
                                 }
                                 break;
                             case WAIT:
                                 if (get(i, j, Direction.CENTER, squaresNextTurn) == null) {
-                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].player, squareAction.squareLogic));
+                                    set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].getPlayer(), squareAction.getSquareLogic()));
                                 } else {
                                     squareDeletes.add(new Location(i, j, Direction.CENTER));
                                 }
@@ -130,14 +132,14 @@ public class GameBoard {
                 }
             }
         }
-        gameState.scoreBoard = currentScore;
+        gameState.setScoreBoard(currentScore);
         squares = squaresNextTurn;
         squareDeletes.forEach(location -> squares[location.getX()][location.getY()] = null);
     }
 
     public static int mod(int x, int y)
     {
-        int result = x % y;
+        final int result = x % y;
         return result < 0? result + y : result;
     }
 }

@@ -3,9 +3,7 @@ package squaregame.squares.assassin;
 import java.util.List;
 import java.util.Optional;
 
-import squaregame.GameBoard;
 import squaregame.Player;
-import squaregame.model.Action;
 import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;
@@ -22,20 +20,20 @@ public class AssassinSquare extends SquareLogic {
 
     @Override
     public SquareAction run(int row, int col, List<Player> view) {
-        Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, this.player).stream().findAny();
+        final Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, this.player).stream().findAny();
         if (direction.isPresent()) {
             lastKill = direction.get();
-            return new SquareAction(Action.ATTACK, direction.get(), this, new DefaultSquare(this.player));
+            return SquareAction.attack(direction.get(), this);
         } else {
             if (lastKill != null) {
-                return new SquareAction(Action.MOVE, lastKill, this, new DefaultSquare(this.player));
+                return SquareAction.move(lastKill, this);
             } else {
                 if (view.get(search.ordinal()) == null) {
-                    return new SquareAction(Action.MOVE, search, this, new DefaultSquare(this.player));
+                    return SquareAction.move(search, this);
                 } else {
-                    Optional<Direction> searchDirection = SquareLogicUtilities.getEmptyDirections(view).stream().findAny();
-                    return searchDirection.map(direction1 -> new SquareAction(Action.MOVE, direction1, this, new DefaultSquare(this.player)))
-                            .orElseGet(() -> new SquareAction(Action.WAIT, Direction.E, this, new DefaultSquare(this.player)));
+                    final Optional<Direction> searchDirection = SquareLogicUtilities.getEmptyDirections(view).stream().findAny();
+                    return searchDirection.map(d -> SquareAction.move(d, this))
+                            .orElseGet(() -> SquareAction.wait(this));
                 }
             }
         }

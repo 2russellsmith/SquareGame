@@ -21,10 +21,10 @@ public class DefaultSquare2 extends SquareLogic {
 
     @Override
     public SquareAction run(int row, int col, List<Player> view) {
-        List<Direction> directions = SquareLogicUtilities.getEmptyDirections(view);
+        final List<Direction> directions = SquareLogicUtilities.getEmptyDirections(view);
         if (directions.isEmpty()) {
-            return new SquareAction(Action.WAIT, Direction.CENTER, this, new DefaultSquare2(this.player));
+            return SquareAction.wait(this);
         }
-        return new SquareAction(Action.REPLICATE, directions.get(0), this, new DefaultSquare2(this.player));
+        return SquareAction.replicate(directions.get(0), this, new DefaultSquare2(this.player));
     }
 }

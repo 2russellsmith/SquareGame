@@ -16,9 +16,10 @@ import squaregame.squares.player2.DefaultSquare2;
  * Created by Russell on 5/5/18.
  */
 public class GameState {
-    public int roundNumber;
-    public List<Player> playerList;
-    public Map<Player, Score> scoreBoard;
+    private int roundNumber;
+    private List<Player> playerList;
+
+    private Map<Player, Score> scoreBoard;
     public GameState() {
         roundNumber = 0;
         playerList = new ArrayList<>(
@@ -33,7 +34,7 @@ public class GameState {
         return "Round: " + roundNumber + "\n" + printScore();
     }
     public String printEndGame() {
-        return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).getScore())).get().name + " WINS THE GAME!!!";
+        return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).getScore())).get().getName() + " WINS THE GAME!!!";
     }
 
     public boolean someoneWon() {
@@ -41,6 +42,22 @@ public class GameState {
     }
 
     public String printScore() {
-        return playerList.stream().map(p -> p.name + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
+        return playerList.stream().map(p -> p.getName() + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void nextRound() {
+        this.roundNumber++;
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void setScoreBoard(Map<Player, Score> scoreBoard) {
+        this.scoreBoard = scoreBoard;
     }
 }

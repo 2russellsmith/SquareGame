@@ -50,9 +50,9 @@ public class ButtonPanel extends JPanel implements ActionListener {
         if ("StartGame".equals(e.getActionCommand())) {
             squareGameMain.startGame();
         } else if ("StopGame".equals(e.getActionCommand())){
-            squareGameMain.timer.stop();
+            squareGameMain.getTimer().stop();
         } else if ("ResetGame".equals(e.getActionCommand())){
-            squareGameMain.timer.stop();
+            squareGameMain.getTimer().stop();
             squareGameMain.resetGame();
         }
     }

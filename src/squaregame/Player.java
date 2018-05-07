@@ -8,9 +8,9 @@ import java.awt.*;
  * Created by Russell on 5/5/18.
  */
 public class Player {
-    Color color;
-    public String name;
-    SquareLogic startingLogic;
+    private Color color;
+    private String name;
+    private SquareLogic startingLogic;
 
     public Player (String name, Color color) {
         this.color = color;
@@ -19,5 +19,17 @@ public class Player {
 
     public void setStartingLogic(SquareLogic startingLogic) {
         this.startingLogic = startingLogic;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public SquareLogic getStartingLogic() {
+        return startingLogic;
     }
 }

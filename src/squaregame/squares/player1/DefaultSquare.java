@@ -24,9 +24,9 @@ public class DefaultSquare extends SquareLogic {
     public SquareAction run(int row, int col, List<Player> view) {
 
         if (alive++ % 20 == 0) {
-            return new SquareAction(Action.REPLICATE, Direction.NE, this, new DefaultSquare(this.player));
+            return SquareAction.replicate(Direction.NE, this, new DefaultSquare(this.player));
         } else {
-            return new SquareAction(Action.MOVE, Direction.SE, this, new DefaultSquare(this.player));
+            return SquareAction.move(Direction.SE, this);
         }
     }
 }
