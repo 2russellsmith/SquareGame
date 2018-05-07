@@ -1,6 +1,6 @@
 package squaregame.squares;
 
-import squaregame.Player;
+import squaregame.model.Player;
 
 import java.util.List;
 

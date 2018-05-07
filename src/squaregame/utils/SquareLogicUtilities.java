@@ -1,9 +1,9 @@
-package squaregame.squares;
+package squaregame.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import squaregame.Player;
+import squaregame.model.Player;
 import squaregame.model.Direction;
 
 public class SquareLogicUtilities {

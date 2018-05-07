@@ -9,8 +9,11 @@ import java.util.Map;
 import squaregame.model.Direction;
 import squaregame.model.GameState;
 import squaregame.model.Location;
+import squaregame.model.MagicSquare;
+import squaregame.model.Player;
 import squaregame.model.Score;
 import squaregame.squares.SquareAction;
+import squaregame.utils.MiscUtilities;
 
 /**
  * Created by Russell on 5/5/18.

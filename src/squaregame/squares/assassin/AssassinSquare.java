@@ -3,11 +3,11 @@ package squaregame.squares.assassin;
 import java.util.List;
 import java.util.Optional;
 
-import squaregame.Player;
+import squaregame.model.Player;
 import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;
-import squaregame.squares.SquareLogicUtilities;
+import squaregame.utils.SquareLogicUtilities;
 
 public class AssassinSquare extends SquareLogic {
     private Direction lastKill;

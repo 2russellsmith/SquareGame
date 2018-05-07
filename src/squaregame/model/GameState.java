@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import squaregame.Player;
 import squaregame.squares.assassin.DefaultSquare;
 import squaregame.squares.player2.DefaultSquare2;
 
@@ -23,7 +22,7 @@ public class GameState {
     public GameState() {
         roundNumber = 0;
         playerList = new ArrayList<>(
-                Arrays.asList(new Player("Assassin", new Color(50, 100, 255)),
+                Arrays.asList(new Player("Assassin", new Color(251, 255, 89)),
                         new Player("Player2", new Color(255,0, 0))));
         playerList.get(0).setStartingLogic(new DefaultSquare(playerList.get(0)));
         playerList.get(1).setStartingLogic(new DefaultSquare2(playerList.get(1)));

@@ -2,9 +2,7 @@ package squaregame.squares.player1;
 
 import java.util.List;
 
-import squaregame.GameBoard;
-import squaregame.Player;
-import squaregame.model.Action;
+import squaregame.model.Player;
 import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;

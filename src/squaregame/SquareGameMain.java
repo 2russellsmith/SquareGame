@@ -1,11 +1,11 @@
 package squaregame;
 
 import squaregame.model.GameState;
+import squaregame.model.MagicSquare;
 import squaregame.view.ButtonPanel;
 import squaregame.view.GameBoardView;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;

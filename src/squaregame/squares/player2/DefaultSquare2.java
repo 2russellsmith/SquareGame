@@ -2,13 +2,11 @@ package squaregame.squares.player2;
 
 import java.util.List;
 
-import squaregame.GameBoard;
-import squaregame.Player;
-import squaregame.model.Action;
+import squaregame.model.Player;
 import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;
-import squaregame.squares.SquareLogicUtilities;
+import squaregame.utils.SquareLogicUtilities;
 
 /**
  * Created by Russell on 5/5/18.

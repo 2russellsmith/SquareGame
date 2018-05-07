@@ -1,4 +1,4 @@
-package squaregame;
+package squaregame.model;
 
 import squaregame.squares.SquareLogic;
 

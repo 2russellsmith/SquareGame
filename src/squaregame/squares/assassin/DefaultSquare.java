@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import squaregame.Player;
+import squaregame.model.Player;
 import squaregame.model.Direction;
 import squaregame.squares.SquareAction;
 import squaregame.squares.SquareLogic;
-import squaregame.squares.SquareLogicUtilities;
+import squaregame.utils.SquareLogicUtilities;
 
 public class DefaultSquare extends SquareLogic {
 
