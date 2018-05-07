@@ -9,34 +9,15 @@ import java.awt.*;
  */
 public class Player {
     Color color;
-    int score;
     public String name;
     SquareLogic startingLogic;
 
-    public Player (String name, Color color, SquareLogic startingSquare) {
+    public Player (String name, Color color) {
         this.color = color;
-        score = 1;
         this.name = name;
-        this.startingLogic = startingSquare;
     }
 
-    public void resetScore() {
-        this.score = 0;
-    }
-
-    public int getScore() {
-        return this.score;
-    }
-
-    public void addPoint() {
-        this.score ++;
-    }
-
-    public void removePoint(){
-        this.score--;
-    }
-
-    public String printScore() {
-        return name + ": " + score;
+    public void setStartingLogic(SquareLogic startingLogic) {
+        this.startingLogic = startingLogic;
     }
 }

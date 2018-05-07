@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class ButtonPanel extends JPanel implements ActionListener {
-    public JButton startButton, endButton;
+    public JButton startButton, endButton, resetButton;
     private SquareGameMain squareGameMain;
 
     public ButtonPanel(SquareGameMain squareGameMain) {
@@ -25,15 +25,23 @@ public class ButtonPanel extends JPanel implements ActionListener {
         endButton.setMnemonic(KeyEvent.VK_E);
         endButton.setActionCommand("StopGame");
 
+        resetButton = new JButton("Reset Game");
+        resetButton.setVerticalTextPosition(AbstractButton.CENTER);
+        resetButton.setHorizontalTextPosition(AbstractButton.CENTER);
+        resetButton.setMnemonic(KeyEvent.VK_R);
+        resetButton.setActionCommand("ResetGame");
+
         startButton.addActionListener(this);
         endButton.addActionListener(this);
+        resetButton.addActionListener(this);
 
         startButton.setToolTipText("Starts the game");
         endButton.setToolTipText("Stops the game");
-        endButton.setEnabled(true);
+        resetButton.setToolTipText("Resets the game");
 
         add(startButton);
         add(endButton);
+        add(resetButton);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -41,6 +49,9 @@ public class ButtonPanel extends JPanel implements ActionListener {
             squareGameMain.startGame();
         } else if ("StopGame".equals(e.getActionCommand())){
             squareGameMain.timer.stop();
+        } else if ("ResetGame".equals(e.getActionCommand())){
+            squareGameMain.timer.stop();
+            squareGameMain.resetGame();
         }
     }
 

@@ -18,31 +18,30 @@ public class SquareGameMain extends JFrame {
     public static final Integer BOARD_VISUAL_SIZE = SQUARE_SIZE * BOARD_SIZE;
     private final ButtonPanel buttonPanel;
     private final JTextArea roundText;
-    private final GameState gameState;
+    private GameState gameState;
 
-    GameBoard gameBoard = new GameBoard(new MagicSquare[BOARD_VISUAL_SIZE][BOARD_VISUAL_SIZE]);
+    public GameBoard gameBoard;
     public Timer timer;
     private int round = 0;
 
     public SquareGameMain() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        JPanel gameBoardView = new GameBoardView(this.gameBoard);
-        gameState = new GameState();
+        resetGame();
+        JPanel gameBoardView = new GameBoardView(this);
         roundText = new JTextArea(Integer.toString(round));
         setTitle("SquareGame");
         this.buttonPanel = new ButtonPanel(this);
         this.getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
         this.getContentPane().add(gameBoardView, BorderLayout.CENTER);
         this.getContentPane().add(roundText, BorderLayout.EAST);
-        this.setSize(1000,1000);
+        this.setSize(1000, 1000);
         initializeGame();
     }
 
 
     private void initializeGame() {
-        gameBoard.setStartingPositions(GameState.playerList);
-        this.timer = new Timer(2, e -> {
+        this.timer = new Timer(1, e -> {
             runRound();
             repaint();
         });
@@ -52,19 +51,21 @@ public class SquareGameMain extends JFrame {
         gameBoard.runAllTurns();
     }
 
-    public static void main(String arg[]) throws InterruptedException {
+    public static void main(String arg[]) {
         SwingUtilities.invokeLater(SquareGameMain::new);
 
     }
 
     public void startGame() {
+        gameBoard.setStartingPositions(this.gameState.playerList);
+        repaint();
         timer.start();
     }
 
     public void runRound() {
         this.runTurns();
         this.roundText.setText(this.gameState.printGameState());
-        if (this.gameState.roundNumber++ >= 2500) {
+        if (this.gameState.someoneWon() || this.gameState.roundNumber++ >= 100000) {
             this.timer.stop();
             this.gameOver();
         }
@@ -74,4 +75,9 @@ public class SquareGameMain extends JFrame {
         this.roundText.append("\n" + this.gameState.printEndGame());
     }
 
+    public void resetGame() {
+        this.gameState = new GameState();
+        this.gameBoard = new GameBoard(new MagicSquare[BOARD_VISUAL_SIZE][BOARD_VISUAL_SIZE], this.gameState);
+        this.repaint();
+    }
 }

@@ -1,22 +1,26 @@
 package squaregame;
 
-import squaregame.squares.SquareAction;
-
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static squaregame.model.GameState.playerList;
+import squaregame.model.GameState;
+import squaregame.model.Score;
+import squaregame.squares.SquareAction;
 
 /**
  * Created by Russell on 5/5/18.
  */
 public class GameBoard {
+    private final GameState gameState;
     private MagicSquare[][] squares;
     private final int INACTIVE_COUNT = 100;
 
-    public GameBoard(MagicSquare[][] magicSquares) {
+    public GameBoard(MagicSquare[][] magicSquares, GameState gameState) {
         this.squares = magicSquares;
+        this.gameState = gameState;
     }
 
     public void draw(Graphics2D g2){
@@ -68,11 +72,14 @@ public class GameBoard {
     public void runAllTurns() {
         MagicSquare[][] squaresNextTurn = new MagicSquare[SquareGameMain.BOARD_SIZE][SquareGameMain.BOARD_SIZE];
         List<Location> squareDeletes = new ArrayList<>();
-        playerList.forEach(Player::resetScore);
+        Map<Player, Score> currentScore = new HashMap<>();
+        this.gameState.playerList.forEach(p -> {
+            currentScore.put(p, new Score());
+        });
         for (int i = 0; i < SquareGameMain.BOARD_SIZE; i++) {
             for (int j = 0; j < SquareGameMain.BOARD_SIZE; j++) {
                 if (squares[i][j] != null) {
-                    squares[i][j].player.addPoint();
+                    currentScore.get(squares[i][j].player).addPoint();
                     if (squares[i][j].inactive > 0) {
                         if (get(i, j, Direction.CENTER, squaresNextTurn) == null) {
                             set(i, j, Direction.CENTER, squaresNextTurn, new MagicSquare(squares[i][j].player,
@@ -121,6 +128,7 @@ public class GameBoard {
                 }
             }
         }
+        gameState.scoreBoard = currentScore;
         squares = squaresNextTurn;
         squareDeletes.forEach(location -> squares[location.x][location.y] = null);
     }
