@@ -23,6 +23,7 @@ public class AssassinSquare extends SquareLogic {
     public SquareAction run(int row, int col, List<Player> view) {
         Optional<GameBoard.Direction> direction = SquareLogicUtilities.getEnemyDirections(view, this.player).stream().findAny();
         if (direction.isPresent()) {
+            lastKill = direction.get();
             return new SquareAction(Action.ATTACK, direction.get(), this, new DefaultSquare(this.player));
         } else {
             if (lastKill != null) {
