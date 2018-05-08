@@ -1,4 +1,4 @@
-package squaregame;
+package squaregame.model;
 
 import squaregame.model.Direction;
 import squaregame.model.MagicSquare;

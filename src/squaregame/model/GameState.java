@@ -1,16 +1,15 @@
 package squaregame.model;
 
+import org.reflections.Reflections;
 import squaregame.controller.SquareLogicClassLoader;
 import squaregame.squares.SquareLogic;
-import squaregame.squares.assassin.DefaultSquare;
-import squaregame.squares.player2.DefaultSquare2;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -25,11 +24,22 @@ public class GameState {
     private Map<Player, Score> scoreBoard;
     public GameState() {
         roundNumber = 0;
-        aiOptions = new ArrayList<>(Arrays.asList(new DefaultSquare(), new DefaultSquare2(), new squaregame.squares.player1.DefaultSquare()));
+        Reflections reflections = new Reflections("squaregame.squares");
+        Set<Class<? extends SquareLogic>> classes = reflections.getSubTypesOf(SquareLogic.class);
+        aiOptions = new ArrayList<>();
+        classes.forEach(c -> {
+            if (c.getSimpleName().equals("DefaultSquare")) {
+                try {
+                    aiOptions.add(c.newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         final SquareLogicClassLoader squareLogicClassLoader = new SquareLogicClassLoader();
         squareLogicClassLoader.getAiOptions();
         playerList = new ArrayList<>();
-        playerList.add(new Player("PLAYER1", Color.CYAN, aiOptions.get(0)));
+        playerList.add(new Player("PLAYER1", Color.RED, aiOptions.get(0)));
         playerList.add(new Player("PLAYER2", Color.GREEN, aiOptions.get(0)));
 
     }

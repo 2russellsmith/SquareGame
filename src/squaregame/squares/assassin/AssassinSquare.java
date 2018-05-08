@@ -38,4 +38,9 @@ public class AssassinSquare extends SquareLogic {
             }
         }
     }
+
+    @Override
+    public String getSquareName() {
+        return "Assassin";
+    }
 }

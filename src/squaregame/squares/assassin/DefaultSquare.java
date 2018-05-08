@@ -29,8 +29,8 @@ public class DefaultSquare extends SquareLogic {
     }
 
     @Override
-    public String toString() {
-        return "The Assassin Factory";
+    public String getSquareName() {
+        return "Assassin Factory";
     }
 
 }

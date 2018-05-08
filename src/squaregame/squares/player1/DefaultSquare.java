@@ -24,4 +24,9 @@ public class DefaultSquare extends SquareLogic {
             return SquareAction.move(Direction.SE, this);
         }
     }
+
+    @Override
+    public String getSquareName() {
+        return "Rep and Move";
+    }
 }

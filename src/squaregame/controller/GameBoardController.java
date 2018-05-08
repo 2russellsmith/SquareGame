@@ -1,6 +1,6 @@
 package squaregame.controller;
 
-import squaregame.GameBoard;
+import squaregame.model.GameBoard;
 import squaregame.SquareGameMain;
 import squaregame.model.Direction;
 import squaregame.model.GameState;
