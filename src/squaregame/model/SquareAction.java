@@ -1,7 +1,6 @@
-package squaregame.squares;
+package squaregame.model;
 
-import squaregame.model.Action;
-import squaregame.model.Direction;
+import squaregame.squares.SquareLogic;
 
 /**
  * Created by Russell on 5/5/18.

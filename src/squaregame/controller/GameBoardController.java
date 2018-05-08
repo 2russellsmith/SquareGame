@@ -8,7 +8,7 @@ import squaregame.model.Location;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.Score;
-import squaregame.squares.SquareAction;
+import squaregame.model.SquareAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,27 +35,29 @@ public class GameBoardController {
             runRound();
             squareGameMain.repaint();
         });
+        this.gameState = new GameState();
         resetGame();
     }
 
     public void runRound() {
         runAllTurns();
-        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 100000) {
+        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 10000) {
             this.timer.stop();
         }
         this.gameState.nextRound();
     }
 
     public void startGame() {
-        resetGame();
-        setStartingPositions();
+        if (this.gameState.getRoundNumber() == 0) {
+            setStartingPositions();
+        }
         this.timer.start();
     }
 
     public void resetGame() {
         this.timer.stop();
         this.gameBoard = new GameBoard(BOARD_SIZE);
-        this.gameState = new GameState();
+        this.gameState.reset();
         squareGameMain.repaint();
     }
 
@@ -84,7 +86,8 @@ public class GameBoardController {
                             squareDeletes.add(new Location(i, j, Direction.CENTER));
                         }
                     } else {
-                        final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic().run(i, j, this.gameBoard.getView(i, j));
+                        final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic()
+                                .run(this.gameBoard.get(i, j), i, j, this.gameBoard.getView(i, j));
                         switch (squareAction.getAction()) {
                             case ATTACK:
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {
@@ -135,7 +138,12 @@ public class GameBoardController {
         return gameBoard;
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
     public void stopGame() {
         this.timer.stop();
     }
+
 }

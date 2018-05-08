@@ -1,8 +1,9 @@
 package squaregame.squares.assassin;
 
 import squaregame.model.Direction;
+import squaregame.model.MagicSquare;
 import squaregame.model.Player;
-import squaregame.squares.SquareAction;
+import squaregame.model.SquareAction;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -13,14 +14,13 @@ public class AssassinSquare extends SquareLogic {
     private Direction lastKill;
     private Direction search;
 
-    public AssassinSquare(Player player, Direction search) {
-        super(player);
+    public AssassinSquare(Direction search) {
         this.search = search;
     }
 
     @Override
-    public SquareAction run(int row, int col, List<Player> view) {
-        final Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, this.player).stream().findAny();
+    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+        final Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, magicSquare.getPlayer()).stream().findAny();
         if (direction.isPresent()) {
             lastKill = direction.get();
             return SquareAction.attack(direction.get(), this);

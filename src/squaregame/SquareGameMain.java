@@ -1,6 +1,7 @@
 package squaregame;
 
 import squaregame.controller.GameBoardController;
+import squaregame.view.AISelectorPanel;
 import squaregame.view.ButtonPanel;
 import squaregame.view.GameBoardView;
 
@@ -23,7 +24,8 @@ public class SquareGameMain extends JFrame {
         final ButtonPanel buttonPanel = new ButtonPanel(gameBoardController);
         this.getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
         this.getContentPane().add(gameBoardView, BorderLayout.CENTER);
-        this.getContentPane().add(roundText, BorderLayout.EAST);
+        this.getContentPane().add(new AISelectorPanel(gameBoardController), BorderLayout.EAST);
+        this.getContentPane().add(roundText, BorderLayout.SOUTH);
         this.setSize(1000, 1000);
     }
 

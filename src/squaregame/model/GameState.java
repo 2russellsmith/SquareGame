@@ -1,5 +1,7 @@
 package squaregame.model;
 
+import squaregame.controller.SquareLogicClassLoader;
+import squaregame.squares.SquareLogic;
 import squaregame.squares.assassin.DefaultSquare;
 import squaregame.squares.player2.DefaultSquare2;
 
@@ -16,23 +18,26 @@ import java.util.stream.Collectors;
  */
 public class GameState {
     private int roundNumber;
+
     private List<Player> playerList;
+    private List<SquareLogic> aiOptions;
 
     private Map<Player, Score> scoreBoard;
     public GameState() {
         roundNumber = 0;
-        playerList = new ArrayList<>(
-                Arrays.asList(new Player("Assassin", new Color(251, 255, 89)),
-                        new Player("Player2", new Color(255,0, 0))));
-        playerList.get(0).setStartingLogic(new DefaultSquare(playerList.get(0)));
-        playerList.get(1).setStartingLogic(new DefaultSquare2(playerList.get(1)));
+        aiOptions = new ArrayList<>(Arrays.asList(new DefaultSquare(), new DefaultSquare2(), new squaregame.squares.player1.DefaultSquare()));
+        final SquareLogicClassLoader squareLogicClassLoader = new SquareLogicClassLoader();
+        squareLogicClassLoader.getAiOptions();
+        playerList = new ArrayList<>();
+        playerList.add(new Player("PLAYER1", Color.CYAN, aiOptions.get(0)));
+        playerList.add(new Player("PLAYER2", Color.GREEN, aiOptions.get(0)));
 
     }
 
     public String printGameState() {
         return "Round: " + roundNumber + "\n" + printScore();
     }
-    public String printEndGame() {
+    public String endGame() {
         return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).getScore())).get().getName() + " WINS THE GAME!!!";
     }
 
@@ -48,12 +53,20 @@ public class GameState {
         return roundNumber;
     }
 
+    public void reset() {
+        roundNumber = 0;
+    }
+
     public void nextRound() {
         this.roundNumber++;
     }
 
     public List<Player> getPlayerList() {
         return playerList;
+    }
+
+    public List<SquareLogic> getAiOptions() {
+        return aiOptions;
     }
 
     public void setScoreBoard(Map<Player, Score> scoreBoard) {

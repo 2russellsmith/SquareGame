@@ -1,8 +1,9 @@
 package squaregame.squares.player2;
 
 import squaregame.model.Direction;
+import squaregame.model.MagicSquare;
 import squaregame.model.Player;
-import squaregame.squares.SquareAction;
+import squaregame.model.SquareAction;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -13,16 +14,17 @@ import java.util.List;
  */
 public class DefaultSquare2 extends SquareLogic {
 
-    public DefaultSquare2(Player player) {
-        super(player);
-    }
-
     @Override
-    public SquareAction run(int row, int col, List<Player> view) {
+    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
         final List<Direction> directions = SquareLogicUtilities.getEmptyDirections(view);
         if (directions.isEmpty()) {
             return SquareAction.wait(this);
         }
-        return SquareAction.replicate(directions.get(0), this, new DefaultSquare2(this.player));
+        return SquareAction.replicate(directions.get(0), this, new DefaultSquare2());
+    }
+
+    @Override
+    public String toString() {
+        return "Make like bunnies";
     }
 }

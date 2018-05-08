@@ -1,8 +1,9 @@
 package squaregame.squares.player1;
 
 import squaregame.model.Direction;
+import squaregame.model.MagicSquare;
 import squaregame.model.Player;
-import squaregame.squares.SquareAction;
+import squaregame.model.SquareAction;
 import squaregame.squares.SquareLogic;
 
 import java.util.List;
@@ -14,15 +15,11 @@ public class DefaultSquare extends SquareLogic {
 
     private int alive = 0;
 
-    public DefaultSquare(Player player) {
-        super(player);
-    }
-
     @Override
-    public SquareAction run(int row, int col, List<Player> view) {
+    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
 
         if (alive++ % 20 == 0) {
-            return SquareAction.replicate(Direction.NE, this, new DefaultSquare(this.player));
+            return SquareAction.replicate(Direction.NE, this, new DefaultSquare());
         } else {
             return SquareAction.move(Direction.SE, this);
         }
