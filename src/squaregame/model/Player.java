@@ -2,7 +2,7 @@ package squaregame.model;
 
 import squaregame.squares.SquareLogic;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by Russell on 5/5/18.

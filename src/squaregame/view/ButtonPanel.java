@@ -1,20 +1,21 @@
 package squaregame.view;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import squaregame.controller.GameBoardController;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import squaregame.SquareGameMain;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class ButtonPanel extends JPanel implements ActionListener {
     public JButton startButton, endButton, resetButton;
-    private SquareGameMain squareGameMain;
+    private GameBoardController gameBoardController;
 
-    public ButtonPanel(SquareGameMain squareGameMain) {
-        this.squareGameMain = squareGameMain;
+    public ButtonPanel(GameBoardController gameBoardController) {
+        this.gameBoardController = gameBoardController;
         startButton = new JButton("Start Game");
         startButton.setVerticalTextPosition(AbstractButton.CENTER);
         startButton.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -48,12 +49,11 @@ public class ButtonPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if ("StartGame".equals(e.getActionCommand())) {
-            squareGameMain.startGame();
+            this.gameBoardController.startGame();
         } else if ("StopGame".equals(e.getActionCommand())){
-            squareGameMain.getTimer().stop();
+            this.gameBoardController.stopGame();
         } else if ("ResetGame".equals(e.getActionCommand())){
-            squareGameMain.getTimer().stop();
-            squareGameMain.resetGame();
+            this.gameBoardController.resetGame();
         }
     }
 

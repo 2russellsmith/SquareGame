@@ -1,8 +1,5 @@
 package squaregame.model;
 
-import squaregame.GameBoard;
-import squaregame.SquareGameMain;
-
 /**
  * Created by Russell on 5/5/18.
  */
@@ -11,8 +8,8 @@ public class Location {
     private int y;
     public Location(int x, int y, Direction direction) {
 
-        this.x = GameBoard.mod((direction.getxOffset() + x), SquareGameMain.BOARD_SIZE);
-        this.y = GameBoard.mod((direction.getyOffset() + y), SquareGameMain.BOARD_SIZE);
+        this.x = Math.floorMod((direction.getxOffset() + x), 150);
+        this.y = Math.floorMod((direction.getyOffset() + y), 150);
     }
 
     public int getX() {

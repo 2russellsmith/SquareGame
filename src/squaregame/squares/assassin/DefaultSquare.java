@@ -1,16 +1,16 @@
 package squaregame.squares.assassin;
 
+import squaregame.model.Direction;
+import squaregame.model.Player;
+import squaregame.squares.SquareAction;
+import squaregame.squares.SquareLogic;
+import squaregame.utils.SquareLogicUtilities;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import squaregame.model.Player;
-import squaregame.model.Direction;
-import squaregame.squares.SquareAction;
-import squaregame.squares.SquareLogic;
-import squaregame.utils.SquareLogicUtilities;
 
 public class DefaultSquare extends SquareLogic {
 

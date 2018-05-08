@@ -1,5 +1,8 @@
 package squaregame.model;
 
+import squaregame.squares.assassin.DefaultSquare;
+import squaregame.squares.player2.DefaultSquare2;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import squaregame.squares.assassin.DefaultSquare;
-import squaregame.squares.player2.DefaultSquare2;
 
 /**
  * Created by Russell on 5/5/18.
