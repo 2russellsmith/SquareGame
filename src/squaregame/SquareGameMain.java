@@ -30,9 +30,10 @@ public class SquareGameMain extends JFrame {
         this.getContentPane().add(gameBoardView, BorderLayout.LINE_START);
         this.getContentPane().add(new AISelectorPanel(gameBoardController), BorderLayout.LINE_END);
         this.getContentPane().add(roundText, BorderLayout.CENTER);
-
-        gameBoardView.setPreferredSize(new Dimension(600, 600));
-        this.setSize(new Dimension(925, 670));
+        final int boardWidth = GameBoardView.SQUARE_SIZE * gameBoardController.getGameBoard().getBoardSize();
+        final int boardHeight = boardWidth;
+        gameBoardView.setPreferredSize(new Dimension(boardWidth, boardHeight));
+        this.setSize(new Dimension(925, 660));
     }
 
     public static void main(String arg[]) {
