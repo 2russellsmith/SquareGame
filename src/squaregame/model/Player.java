@@ -14,11 +14,11 @@ import javax.swing.JComboBox;
  */
 public class Player implements ActionListener {
     private Color color;
-    private SquareLogic startingLogic;
+    private AIOption aiOption;
 
-    public Player (Color color, SquareLogic squareLogic) {
+    public Player (Color color, AIOption aiOption) {
         this.color = color;
-        this.startingLogic = squareLogic;
+        this.aiOption = aiOption;
     }
 
     public Player (Player player) {
@@ -26,7 +26,7 @@ public class Player implements ActionListener {
     }
 
     public void replace(Player player) {
-        this.startingLogic = player.startingLogic;
+        this.aiOption = player.aiOption;
     }
 
     public Color getColor() {
@@ -34,16 +34,24 @@ public class Player implements ActionListener {
     }
 
     public String getName() {
-        return startingLogic.getSquareName();
+        return aiOption.getSquareLogic().getSquareName();
     }
 
     public SquareLogic getStartingLogic() {
-        return startingLogic;
+        return aiOption.getSquareLogic();
+    }
+
+    public AIOption getAiOption() {
+        return this.aiOption;
+    }
+
+    public boolean isPlaying() {
+        return aiOption != null;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         final AISelectorComboBox aiSelectorComboBox = (AISelectorComboBox)e.getSource();
-        this.startingLogic = (SquareLogic)aiSelectorComboBox.getSelectedItem();
+        this.aiOption = (AIOption)aiSelectorComboBox.getSelectedItem();
     }
 }

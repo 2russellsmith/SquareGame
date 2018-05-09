@@ -1,23 +1,22 @@
 package squaregame.controller;
 
-import squaregame.model.GameBoard;
 import squaregame.SquareGameMain;
 import squaregame.model.Direction;
+import squaregame.model.GameBoard;
 import squaregame.model.GameState;
 import squaregame.model.Location;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.Score;
 import squaregame.model.SquareAction;
-import squaregame.squares.SquareLogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.Timer;
 
 public class GameBoardController {
@@ -25,11 +24,13 @@ public class GameBoardController {
     private static final Integer BOARD_SIZE = 150;
     private static final int INACTIVE_COUNT = 100;
 
-    private final Timer timer;
+    private Timer timer;
 
     private GameBoard gameBoard;
     private GameState gameState;
     private SquareGameMain squareGameMain;
+    private boolean isLeaderBoardMode = false;
+    private JButton runLeaderboardRoundButton;
 
     public GameBoardController(SquareGameMain squareGameMain) {
         this.squareGameMain = squareGameMain;
@@ -38,25 +39,53 @@ public class GameBoardController {
             squareGameMain.repaint();
         });
         this.gameState = new GameState();
-        resetGame();
+        resetGame(false);
     }
 
     public void runRound() {
         runAllTurns();
+        this.squareGameMain.getGameStatePanel().setText(this.gameState.printGameState());
         if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 10000) {
-            this.timer.stop();
+            this.gameOver();
         }
         this.gameState.nextRound();
+    }
+
+    private void gameOver() {
+        this.timer.stop();
+        if (isLeaderBoardMode) {
+            //TODO: log the game results.
+            final Player winner = this.gameState.getWinner();
+            if (winner != null) {
+                this.gameState.getLeaderboard().addScore(winner.getAiOption().getId(),
+                        this.gameState.getLoser().getAiOption().getId());
+            }
+            this.squareGameMain.getLeaderboardPanel().setText(this.gameState.printLeaderBoard());
+            this.runLeaderboardRoundButton.doClick();
+        }
+
     }
 
     public void startGame() {
         if (this.gameState.getRoundNumber() == 0) {
             setStartingPositions();
+            if (isLeaderBoardMode) {
+                this.timer = new Timer(0, e -> {
+                    runRound();
+                    squareGameMain.repaint();
+                });
+            } else {
+                this.timer = new Timer(0, e -> {
+                    runRound();
+                    squareGameMain.repaint();
+                });
+            }
         }
         this.timer.start();
     }
 
-    public void resetGame() {
+    public void resetGame(boolean isLeaderBoardMode) {
+        this.isLeaderBoardMode = isLeaderBoardMode;
         this.timer.stop();
         this.gameBoard = new GameBoard(BOARD_SIZE);
         this.gameState.reset();
@@ -65,7 +94,7 @@ public class GameBoardController {
 
     public void setStartingPositions() {
         final Random random = new Random();
-        this.gameState.getPlayerList().stream().filter(p -> p.getStartingLogic() != null).forEach(p -> this.gameBoard.set(random.nextInt(BOARD_SIZE),
+        this.gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> this.gameBoard.set(random.nextInt(BOARD_SIZE),
                 random.nextInt(BOARD_SIZE), new MagicSquare(p, p.getStartingLogic())));
     }
 
@@ -73,9 +102,7 @@ public class GameBoardController {
         final GameBoard updatedGameBoard = new GameBoard(BOARD_SIZE);
         final List<Location> squareDeletes = new ArrayList<>();
         final Map<Player, Score> currentScore = new HashMap<>();
-        this.gameState.getPlayerList().forEach(p -> {
-            currentScore.put(p, new Score());
-        });
+        this.gameState.getPlayerList().forEach(p -> currentScore.put(p, new Score()));
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 if (this.gameBoard.get(i, j) != null) {
@@ -148,4 +175,7 @@ public class GameBoardController {
         this.timer.stop();
     }
 
+    public void setRunLeaderboardRoundButton(JButton runLeaderboardRoundButton) {
+        this.runLeaderboardRoundButton = runLeaderboardRoundButton;
+    }
 }

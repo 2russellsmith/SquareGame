@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +21,8 @@ public class GameState {
     private int MAX_PLAYERS = 8;
 
     private List<Player> playerList;
-    private List<SquareLogic> aiOptions;
+    private List<AIOption> aiOptions;
+    private Leaderboard leaderboard;
 
     private Map<Player, Score> scoreBoard;
     public GameState() {
@@ -28,15 +31,17 @@ public class GameState {
         final Set<Class<? extends SquareLogic>> classes = reflections.getSubTypesOf(SquareLogic.class);
         aiOptions = new ArrayList<>();
         aiOptions.add(null);
+        final AtomicInteger aiId = new AtomicInteger(0);
         classes.forEach(c -> {
             if (c.getSimpleName().equals("DefaultSquare")) {
                 try {
-                    aiOptions.add(c.newInstance());
+                    aiOptions.add(new AIOption(c.newInstance(), aiId.getAndIncrement()));
                 } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         });
+        this.leaderboard = new Leaderboard(aiOptions.size());
         playerList = new ArrayList<>();
         playerList.add(new Player(Color.RED, aiOptions.get(0)));
         playerList.add(new Player(Color.GREEN, aiOptions.get(0)));
@@ -60,8 +65,19 @@ public class GameState {
         return playerList.stream().filter(p -> scoreBoard.get(p).getScore() > 0).count() < 2;
     }
 
+    public Player getWinner() {
+        final Comparator<Player> comp = Comparator.comparingInt(p1 -> this.scoreBoard.get(p1).getScore());
+
+        return playerList.stream().filter(Player::isPlaying).max(comp).get();
+    }
+
+    public Player getLoser() {
+        final Comparator<Player> comp = Comparator.comparingInt(p1 -> this.scoreBoard.get(p1).getScore());
+        return playerList.stream().filter(Player::isPlaying).min(comp).get();
+    }
+
     public String printScore() {
-        return playerList.stream().map(p -> p.getName() + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
+        return playerList.stream().filter(Player::isPlaying).map(p -> p.getName() + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
     }
 
     public int getRoundNumber() {
@@ -80,11 +96,20 @@ public class GameState {
         return playerList;
     }
 
-    public List<SquareLogic> getAiOptions() {
+    public List<AIOption> getAiOptions() {
         return aiOptions;
     }
 
     public void setScoreBoard(Map<Player, Score> scoreBoard) {
         this.scoreBoard = scoreBoard;
+    }
+
+    public Leaderboard getLeaderboard() {
+        return leaderboard;
+    }
+
+    public String printLeaderBoard() {
+        return this.aiOptions.stream().filter(Objects::nonNull).map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                this.leaderboard.getWins(aiOption.getId())).collect(Collectors.joining("\n"));
     }
 }

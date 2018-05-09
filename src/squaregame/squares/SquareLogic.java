@@ -12,7 +12,4 @@ import java.util.List;
 public abstract class SquareLogic {
     public abstract SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view);
     public abstract String getSquareName();
-    public String toString() {
-        return getSquareName();
-    }
 }
