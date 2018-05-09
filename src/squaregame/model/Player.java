@@ -14,12 +14,10 @@ import javax.swing.JComboBox;
  */
 public class Player implements ActionListener {
     private Color color;
-    private String name;
     private SquareLogic startingLogic;
 
-    public Player (String name, Color color, SquareLogic squareLogic) {
+    public Player (Color color, SquareLogic squareLogic) {
         this.color = color;
-        this.name = name;
         this.startingLogic = squareLogic;
     }
 
@@ -28,7 +26,6 @@ public class Player implements ActionListener {
     }
 
     public void replace(Player player) {
-        this.name = player.name;
         this.startingLogic = player.startingLogic;
     }
 
@@ -37,7 +34,7 @@ public class Player implements ActionListener {
     }
 
     public String getName() {
-        return name;
+        return startingLogic.getSquareName();
     }
 
     public SquareLogic getStartingLogic() {
@@ -45,15 +42,8 @@ public class Player implements ActionListener {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
     public void actionPerformed(ActionEvent e) {
         final AISelectorComboBox aiSelectorComboBox = (AISelectorComboBox)e.getSource();
-        final SquareLogic squareLogic = (SquareLogic)aiSelectorComboBox.getSelectedItem();
-        this.name = startingLogic.getClass().getSimpleName();
-        this.startingLogic = squareLogic;
+        this.startingLogic = (SquareLogic)aiSelectorComboBox.getSelectedItem();
     }
 }

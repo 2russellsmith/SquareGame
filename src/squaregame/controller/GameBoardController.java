@@ -9,11 +9,13 @@ import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.Score;
 import squaregame.model.SquareAction;
+import squaregame.squares.SquareLogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.swing.Timer;
@@ -63,7 +65,7 @@ public class GameBoardController {
 
     public void setStartingPositions() {
         final Random random = new Random();
-        this.gameState.getPlayerList().forEach(p -> this.gameBoard.set(random.nextInt(BOARD_SIZE),
+        this.gameState.getPlayerList().stream().filter(p -> p.getStartingLogic() != null).forEach(p -> this.gameBoard.set(random.nextInt(BOARD_SIZE),
                 random.nextInt(BOARD_SIZE), new MagicSquare(p, p.getStartingLogic())));
     }
 

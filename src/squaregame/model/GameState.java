@@ -1,7 +1,6 @@
 package squaregame.model;
 
 import org.reflections.Reflections;
-import squaregame.controller.SquareLogicClassLoader;
 import squaregame.squares.SquareLogic;
 
 import java.awt.Color;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
  */
 public class GameState {
     private int roundNumber;
+    private int MAX_PLAYERS = 8;
 
     private List<Player> playerList;
     private List<SquareLogic> aiOptions;
@@ -24,9 +24,10 @@ public class GameState {
     private Map<Player, Score> scoreBoard;
     public GameState() {
         roundNumber = 0;
-        Reflections reflections = new Reflections("squaregame.squares");
-        Set<Class<? extends SquareLogic>> classes = reflections.getSubTypesOf(SquareLogic.class);
+        final Reflections reflections = new Reflections("squaregame.squares");
+        final Set<Class<? extends SquareLogic>> classes = reflections.getSubTypesOf(SquareLogic.class);
         aiOptions = new ArrayList<>();
+        aiOptions.add(null);
         classes.forEach(c -> {
             if (c.getSimpleName().equals("DefaultSquare")) {
                 try {
@@ -36,11 +37,15 @@ public class GameState {
                 }
             }
         });
-        final SquareLogicClassLoader squareLogicClassLoader = new SquareLogicClassLoader();
-        squareLogicClassLoader.getAiOptions();
         playerList = new ArrayList<>();
-        playerList.add(new Player("PLAYER1", Color.RED, aiOptions.get(0)));
-        playerList.add(new Player("PLAYER2", Color.GREEN, aiOptions.get(0)));
+        playerList.add(new Player(Color.RED, aiOptions.get(0)));
+        playerList.add(new Player(Color.GREEN, aiOptions.get(0)));
+        playerList.add(new Player(Color.BLUE, aiOptions.get(0)));
+        playerList.add(new Player(Color.PINK, aiOptions.get(0)));
+        playerList.add(new Player(Color.YELLOW, aiOptions.get(0)));
+        playerList.add(new Player(Color.ORANGE, aiOptions.get(0)));
+        playerList.add(new Player(Color.CYAN, aiOptions.get(0)));
+        playerList.add(new Player(Color.MAGENTA, aiOptions.get(0)));
 
     }
 

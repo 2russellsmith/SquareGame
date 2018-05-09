@@ -32,8 +32,7 @@ public class AssassinSquare extends SquareLogic {
                     return SquareAction.move(search, this);
                 } else {
                     final Optional<Direction> searchDirection = SquareLogicUtilities.getEmptyDirections(view).stream().findAny();
-                    return searchDirection.map(d -> SquareAction.move(d, this))
-                            .orElseGet(() -> SquareAction.wait(this));
+                    return searchDirection.map(d -> SquareAction.move(d, this)).orElseGet(() -> SquareAction.wait(this));
                 }
             }
         }

@@ -7,12 +7,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 
 /**
  * Created by Russell on 5/7/18.
  */
-public class GameBoardView extends JPanel {
+public class GameBoardView extends JComponent {
 
 
     public static final Integer SQUARE_SIZE = 4;
@@ -28,7 +28,7 @@ public class GameBoardView extends JPanel {
         g2.setColor(Color.BLACK);
         g2.fillRect(-1, -1, getBoardVisualSize() + 1, getBoardVisualSize() + 1);
         draw(g2);
-        setPreferredSize(new Dimension(getBoardVisualSize() + 1, getBoardVisualSize() + 1));
+        this.setMinimumSize(new Dimension(getBoardVisualSize() + 1, getBoardVisualSize() + 1));
     }
 
     public void draw(Graphics2D g2){
