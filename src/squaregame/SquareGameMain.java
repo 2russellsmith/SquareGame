@@ -6,6 +6,7 @@ import squaregame.view.ButtonPanel;
 import squaregame.view.GameBoardView;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -26,10 +27,12 @@ public class SquareGameMain extends JFrame {
         setTitle("SquareGame");
         final ButtonPanel buttonPanel = new ButtonPanel(gameBoardController);
         this.getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
-        this.getContentPane().add(gameBoardView, BorderLayout.CENTER);
+        this.getContentPane().add(gameBoardView, BorderLayout.LINE_START);
         this.getContentPane().add(new AISelectorPanel(gameBoardController), BorderLayout.LINE_END);
-        this.getContentPane().add(roundText, BorderLayout.LINE_START);
-        this.setSize(1000, 1000);
+        this.getContentPane().add(roundText, BorderLayout.CENTER);
+
+        gameBoardView.setPreferredSize(new Dimension(600, 600));
+        this.setSize(new Dimension(925, 670));
     }
 
     public static void main(String arg[]) {
