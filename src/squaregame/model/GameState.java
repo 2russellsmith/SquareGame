@@ -109,7 +109,14 @@ public class GameState {
     }
 
     public String printLeaderBoard() {
-        return this.aiOptions.stream().filter(Objects::nonNull).map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
-                this.leaderboard.getWins(aiOption.getId())).collect(Collectors.joining("\n"));
+        final List<AIOption> results = aiOptions.stream()
+                .filter(Objects::nonNull)
+                .sorted((a1, a2) -> Double.compare(this.leaderboard.getWinRate(a2.getId()), this.leaderboard.getWinRate(a1.getId())))
+                .collect(Collectors.toList());
+        return results.stream().filter(Objects::nonNull)
+                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                this.leaderboard.getWins(aiOption.getId()) +
+                        "(" + this.leaderboard.getWinRate(aiOption.getId()) + "%)")
+                .collect(Collectors.joining("\n"));
     }
 }

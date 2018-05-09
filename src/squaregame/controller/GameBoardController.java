@@ -45,7 +45,7 @@ public class GameBoardController {
     public void runRound() {
         runAllTurns();
         this.squareGameMain.getGameStatePanel().setText(this.gameState.printGameState());
-        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 10000) {
+        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 50000) {
             this.gameOver();
         }
         this.gameState.nextRound();
@@ -54,7 +54,6 @@ public class GameBoardController {
     private void gameOver() {
         this.timer.stop();
         if (isLeaderBoardMode) {
-            //TODO: log the game results.
             final Player winner = this.gameState.getWinner();
             if (winner != null) {
                 this.gameState.getLeaderboard().addScore(winner.getAiOption().getId(),

@@ -18,4 +18,18 @@ public class Leaderboard {
         return Arrays.stream(this.scoreboard[aiId]).sum();
     }
 
+    public double getWinRate(int aiId) {
+        final int wins = getWins(aiId);
+        final int losses = getLosses(aiId);
+        if (wins + losses != 0) {
+            return (double) Math.round((double) wins / (wins + losses) * 10000) / 100;
+        } else {
+            return 0;
+        }
+    }
+
+    private int getLosses(int aiId) {
+        return Arrays.stream(this.scoreboard).mapToInt(loss -> loss[aiId]).sum();
+    }
+
 }
