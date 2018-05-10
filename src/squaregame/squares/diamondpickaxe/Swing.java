@@ -4,7 +4,6 @@ import squaregame.model.Direction;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
-import squaregame.utils.SquareLogicUtilities;
 
 import java.util.Optional;
 
@@ -18,8 +17,7 @@ public class Swing extends SquareLogic {
         if (direction.isPresent()) {
             return SquareAction.attack(direction.get(), this);
         }
-        final Direction moveDirection = SquareLogicUtilities.getRotatedDirection(DefaultSquare.startingDirection,
-                Math.floorMod(turn-- / 250, 8) + 1);
+        final Direction moveDirection = DefaultSquare.startingDirection.rotateClockwise(Math.floorMod(turn-- / 250, 8) + 1);
         if (squareView.getLocation(moveDirection) == null) {
             return SquareAction.move(moveDirection, this); 
         } else {

@@ -1,14 +1,10 @@
 package squaregame.squares.diamondpickaxe;
 
 import squaregame.model.Direction;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
-import squaregame.utils.SquareLogicUtilities;
 
-import java.util.List;
 import java.util.Optional;
 
 public class DiamondPickaxe extends SquareLogic {
@@ -37,7 +33,7 @@ public class DiamondPickaxe extends SquareLogic {
                 return SquareAction.wait(new Swing());
             }
             return SquareAction.replicate(getMovingDirection(),
-                    new DiamondPickaxe(1, SquareLogicUtilities.getOppositeDirection(getMovingDirection()), true),
+                    new DiamondPickaxe(1, getMovingDirection().getOppositeDirection(), true),
                     new DiamondPickaxe(1, getMovingDirection(), true));
         }
         if (squareView.getLocation(this.moveDirection) == null) {
@@ -46,7 +42,7 @@ public class DiamondPickaxe extends SquareLogic {
                 return SquareAction.move(this.moveDirection, this);
             } else {
                 return SquareAction.replicate(this.moveDirection,
-                        new DiamondPickaxe(generation + 1, SquareLogicUtilities.getOppositeDirection(this.moveDirection), this.directionChange),
+                        new DiamondPickaxe(generation + 1, this.moveDirection.getOppositeDirection(), this.directionChange),
                         new DiamondPickaxe(generation + 1, this.moveDirection, this.directionChange));
             }
         } else {

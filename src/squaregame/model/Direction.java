@@ -25,4 +25,12 @@ public enum Direction {
     public int getyOffset() {
         return yOffset;
     }
+
+    public Direction getOppositeDirection() {
+        return rotateClockwise(4);
+    }
+
+    public Direction rotateClockwise(int turns) {
+        return Direction.values()[(Math.floorMod(this.ordinal() + turns, 8))];
+    }
 }

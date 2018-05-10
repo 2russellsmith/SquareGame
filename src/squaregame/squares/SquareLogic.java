@@ -1,6 +1,5 @@
 package squaregame.squares;
 
-import squaregame.model.MagicSquare;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 

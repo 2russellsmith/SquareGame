@@ -1,9 +1,5 @@
 package squaregame.model;
 
-import squaregame.model.Direction;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 

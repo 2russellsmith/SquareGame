@@ -1,12 +1,9 @@
 package squaregame.squares.laraza;
 
 import squaregame.model.Direction;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
-import squaregame.utils.SquareLogicUtilities;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

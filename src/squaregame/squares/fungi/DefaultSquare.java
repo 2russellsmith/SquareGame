@@ -1,13 +1,9 @@
 package squaregame.squares.fungi;
 
 import squaregame.model.Direction;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
-
-import java.util.List;
 
 /**
  * growth:

@@ -1,14 +1,10 @@
 package squaregame.squares.thegreatwall;
 
 import squaregame.model.Direction;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
-import squaregame.utils.SquareLogicUtilities;
 
-import java.util.List;
 import java.util.Optional;
 
 public class WallBuilder extends SquareLogic {
@@ -37,7 +33,7 @@ public class WallBuilder extends SquareLogic {
                 return SquareAction.wait(new SearchAndDestroy());
             }
             return SquareAction.replicate(getMovingDirection(),
-                    new WallBuilder(1, SquareLogicUtilities.getOppositeDirection(getMovingDirection()), true),
+                    new WallBuilder(1, getMovingDirection().getOppositeDirection(), true),
                     new WallBuilder(1, getMovingDirection(), true));
         }
         if (squareView.getLocation(this.moveDirection) == null) {
@@ -46,7 +42,7 @@ public class WallBuilder extends SquareLogic {
                 return SquareAction.move(this.moveDirection, this);
             } else {
                 return SquareAction.replicate(this.moveDirection,
-                        new WallBuilder(generation + 1, SquareLogicUtilities.getOppositeDirection(this.moveDirection), this.directionChange),
+                        new WallBuilder(generation + 1, this.moveDirection.getOppositeDirection(), this.directionChange),
                         new WallBuilder(generation + 1, this.moveDirection, this.directionChange));
             }
         } else {
@@ -55,7 +51,7 @@ public class WallBuilder extends SquareLogic {
     }
 
     private Direction getMovingDirection() {
-        return SquareLogicUtilities.getRotatedDirection(DefaultSquare.startingDirection, 2);
+        return DefaultSquare.startingDirection.rotateClockwise(2);
     }
 
     @Override
