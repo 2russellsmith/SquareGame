@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JLabel;
@@ -55,8 +56,9 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                 list.add(i);
             }
             Collections.shuffle(list);
-            for (int i = 0; i < 2; i++) {
-                this.comboBoxes.get(i).setSelectedIndex(list.get(i));
+            Random random = new Random();
+            for (int i = 0; i < random.nextInt(8); i++) {
+                this.comboBoxes.get(random.nextInt(8)).setSelectedIndex(list.get(i));
             }
         }
     }

@@ -6,9 +6,12 @@ import squaregame.squares.SquareLogic;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ public class GameState {
     private int totalRounds = 3000;
 
     private List<Player> playerList;
+    private Map<Player, Set<Player>> whoPlayersBeat;
     private List<AIOption> aiOptions;
     private Leaderboard leaderboard;
 
@@ -41,6 +45,7 @@ public class GameState {
                 }
             }
         });
+        this.whoPlayersBeat = new HashMap<>();
         this.leaderboard = new Leaderboard(aiOptions.size());
         playerList = new ArrayList<>();
         playerList.add(new Player(Color.RED, aiOptions.get(0)));
@@ -66,15 +71,23 @@ public class GameState {
         return playerList.stream().filter(p -> scoreBoard.get(p).getScore() > 0).count() < 2;
     }
 
-    public Player getWinner() {
+    public void finalRank() {
+        rankNewDeadPlayers();
         final Comparator<Player> comp = Comparator.comparingInt(p1 -> this.scoreBoard.get(p1).getScore());
+        playerList.stream()
+                .filter(Player::isPlaying)
+                .filter(p -> this.scoreBoard.get(p).getScore() != 0)
+                .sorted(comp)
+                .forEach(loser -> this.whoPlayersBeat.putIfAbsent(loser, new HashSet<>(this.whoPlayersBeat.keySet())));
+        this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.leaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
 
-        return playerList.stream().filter(Player::isPlaying).max(comp).get();
     }
 
-    public Player getLoser() {
-        final Comparator<Player> comp = Comparator.comparingInt(p1 -> this.scoreBoard.get(p1).getScore());
-        return playerList.stream().filter(Player::isPlaying).min(comp).get();
+    public void rankNewDeadPlayers() {
+        playerList.stream()
+                .filter(Player::isPlaying)
+                .filter(p -> this.scoreBoard.get(p).getScore() == 0)
+                .forEach(loser -> this.whoPlayersBeat.putIfAbsent(loser, new HashSet<>(this.whoPlayersBeat.keySet())));
     }
 
     public String printScore() {
@@ -87,6 +100,7 @@ public class GameState {
 
     public void reset() {
         roundNumber = 0;
+        this.whoPlayersBeat = new HashMap<>();
     }
 
     public void nextRound() {
@@ -119,6 +133,10 @@ public class GameState {
                 this.leaderboard.getWins(aiOption.getId()) +
                         "(" + this.leaderboard.getWinRate(aiOption.getId()) + "%)")
                 .collect(Collectors.joining("\n"));
+    }
+
+    public Map<Player, Set<Player>> getWhoPlayersBeat() {
+        return this.whoPlayersBeat;
     }
 
     public boolean gameOver() {

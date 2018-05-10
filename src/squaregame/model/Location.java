@@ -6,10 +6,10 @@ package squaregame.model;
 public class Location {
     private int x;
     private int y;
-    public Location(int x, int y, Direction direction) {
+    public Location(int x, int y, Direction direction, int boardSize) {
 
-        this.x = Math.floorMod((direction.getxOffset() + x), 150);
-        this.y = Math.floorMod((direction.getyOffset() + y), 150);
+        this.x = Math.floorMod((direction.getxOffset() + x), boardSize);
+        this.y = Math.floorMod((direction.getyOffset() + y), boardSize);
     }
 
     public int getX() {

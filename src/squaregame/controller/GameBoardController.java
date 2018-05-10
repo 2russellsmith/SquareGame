@@ -11,6 +11,7 @@ import squaregame.model.Score;
 import squaregame.model.SquareAction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +55,7 @@ public class GameBoardController {
     private void gameOver() {
         this.timer.stop();
         if (isLeaderBoardMode) {
-            final Player winner = this.gameState.getWinner();
-            if (winner != null) {
-                this.gameState.getLeaderboard().addScore(winner.getAiOption().getId(),
-                        this.gameState.getLoser().getAiOption().getId());
-            }
+            this.gameState.finalRank();
             this.squareGameMain.getLeaderboardPanel().setText(this.gameState.printLeaderBoard());
             this.runLeaderboardRoundButton.doClick();
         }
@@ -67,12 +64,9 @@ public class GameBoardController {
 
     public void startGame() {
         if (this.gameState.getRoundNumber() == 0) {
-            if (gameState.getPlayerList().stream().filter(Player::isPlaying).count() == 8) {
-                this.gameBoard = new GameBoard(600);
-                this.gameState.setTotalRounds(5000);
-            } if (gameState.getPlayerList().stream().filter(Player::isPlaying).count() > 2) {
+            if (gameState.getPlayerList().stream().filter(Player::isPlaying).count() > 3) {
                 this.gameBoard = new GameBoard(300);
-                this.gameState.setTotalRounds(5000);
+                this.gameState.setTotalRounds(4000);
             } else {
                 this.gameBoard = new GameBoard(150);
                 this.gameState.setTotalRounds(3000);
@@ -95,6 +89,7 @@ public class GameBoardController {
 
     public void resetGame(boolean isLeaderBoardMode) {
         this.isLeaderBoardMode = isLeaderBoardMode;
+        this.gameBoard = new GameBoard(300);
         this.timer.stop();
         this.gameState.reset();
         squareGameMain.repaint();
@@ -120,7 +115,7 @@ public class GameBoardController {
                             updatedGameBoard.set(i, j, Direction.CENTER, new MagicSquare(this.gameBoard.get(i, j).getPlayer(),
                                     this.gameBoard.get(i, j).getSquareLogic(), (this.gameBoard.get(i, j).getInactive() - 1)));
                         } else {
-                            squareDeletes.add(new Location(i, j, Direction.CENTER));
+                            squareDeletes.add(new Location(i, j, Direction.CENTER, this.gameBoard.getBoardSize()));
                         }
                     } else {
                         final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic()
@@ -130,16 +125,16 @@ public class GameBoardController {
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {
                                     updatedGameBoard.set(i, j, Direction.CENTER, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic()));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, Direction.CENTER));
+                                    squareDeletes.add(new Location(i, j, Direction.CENTER, this.gameBoard.getBoardSize()));
                                 }
-                                squareDeletes.add(new Location(i, j, squareAction.getDirection()));
+                                squareDeletes.add(new Location(i, j, squareAction.getDirection(), this.gameBoard.getBoardSize()));
                                 break;
                             case MOVE:
                                 if (updatedGameBoard.get(i, j, squareAction.getDirection()) == null) {
                                     updatedGameBoard.set(i, j, squareAction.getDirection(), new MagicSquare(this.gameBoard.get(i, j).getPlayer(),
                                             squareAction.getSquareLogic()));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, squareAction.getDirection()));
+                                    squareDeletes.add(new Location(i, j, squareAction.getDirection(), this.gameBoard.getBoardSize()));
                                 }
                                 break;
                             case REPLICATE:
@@ -147,26 +142,27 @@ public class GameBoardController {
                                     updatedGameBoard.set(i, j, squareAction.getDirection(), new MagicSquare(this.gameBoard.get(i, j).getPlayer(),
                                             squareAction.getReplicated(), INACTIVE_COUNT));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, squareAction.getDirection()));
+                                    squareDeletes.add(new Location(i, j, squareAction.getDirection(), this.gameBoard.getBoardSize()));
                                 }
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {
                                     updatedGameBoard.set(i, j, Direction.CENTER, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic(), INACTIVE_COUNT));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, Direction.CENTER));
+                                    squareDeletes.add(new Location(i, j, Direction.CENTER, this.gameBoard.getBoardSize()));
                                 }
                                 break;
                             case WAIT:
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {
                                     updatedGameBoard.set(i, j, Direction.CENTER, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic()));
                                 } else {
-                                    squareDeletes.add(new Location(i, j, Direction.CENTER));
+                                    squareDeletes.add(new Location(i, j, Direction.CENTER, this.gameBoard.getBoardSize()));
                                 }
                         }
                     }
                 }
             }
         }
-        gameState.setScoreBoard(currentScore);
+        this.gameState.setScoreBoard(currentScore);
+        this.gameState.rankNewDeadPlayers();
         this.gameBoard = updatedGameBoard;
         squareDeletes.forEach(location -> this.gameBoard.set(location.getX(), location.getY(), null));
     }
