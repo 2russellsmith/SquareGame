@@ -27,6 +27,16 @@ public class SquareLogicUtilities {
         return result;
     }
 
+    public static List<Direction> getFriendlyDirections(List<Player> view, Player player) {
+        final List<Direction> result = new ArrayList<>();
+        for (int i = 0; i < view.size(); i++) {
+            if (view.get(i) != null && view.get(i) == player) {
+                result.add(Direction.values()[i]);
+            }
+        }
+        return result;
+    }
+
     public static Direction getOppositeDirection(Direction direction) {
         return getRotatedDirection(direction, 4);
     }
