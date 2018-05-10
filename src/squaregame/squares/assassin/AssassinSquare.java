@@ -4,6 +4,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -19,8 +20,8 @@ public class AssassinSquare extends SquareLogic {
     }
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
-        final Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, magicSquare.getPlayer()).stream().findAny();
+    public SquareAction run(SquareView squareView) {
+        final Optional<Direction> direction = squareView.getEnemyDirections().stream().findAny();
         if (direction.isPresent()) {
             lastKill = direction.get();
             return SquareAction.attack(direction.get(), this);
@@ -28,10 +29,10 @@ public class AssassinSquare extends SquareLogic {
             if (lastKill != null) {
                 return SquareAction.move(lastKill, this);
             } else {
-                if (view.get(search.ordinal()) == null) {
+                if (squareView.getLocation(search) == null) {
                     return SquareAction.move(search, this);
                 } else {
-                    final Optional<Direction> searchDirection = SquareLogicUtilities.getEmptyDirections(view).stream().findAny();
+                    final Optional<Direction> searchDirection = squareView.getEmptyDirections().stream().findAny();
                     return searchDirection.map(d -> SquareAction.move(d, this)).orElseGet(() -> SquareAction.wait(this));
                 }
             }

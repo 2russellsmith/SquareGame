@@ -4,6 +4,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 public class DefaultSquare extends SquareLogic {
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+    public SquareAction run(SquareView squareView) {
         return SquareAction.replicate(Direction.N, new Mycelium(Direction.N), new Mycelium(Direction.S));
     }
 

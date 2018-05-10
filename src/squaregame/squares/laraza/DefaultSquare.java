@@ -4,6 +4,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -16,17 +17,17 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DefaultSquare extends SquareLogic {
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+    public SquareAction run(SquareView squareView) {
 
         // Kill if possible
-        final List<Direction> attackDirections = SquareLogicUtilities.getEnemyDirections(view, magicSquare.getPlayer());
+        final List<Direction> attackDirections = squareView.getEnemyDirections();
         if (!attackDirections.isEmpty()) {
             Direction direction = attackDirections.get(ThreadLocalRandom.current().nextInt(attackDirections.size()));
             return SquareAction.attack(direction, this);
         }
 
         // Replicate if not possible
-        final List<Direction> replicateDirections = SquareLogicUtilities.getEmptyDirections(view);
+        final List<Direction> replicateDirections = squareView.getEmptyDirections();
         if (!replicateDirections.isEmpty()) {
             Direction direction = replicateDirections.get(ThreadLocalRandom.current().nextInt(replicateDirections.size()));
             return SquareAction.replicate(direction, this, new DefaultSquare());

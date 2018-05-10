@@ -7,6 +7,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -40,23 +41,23 @@ public class Mycelium extends SquareLogic {
     }
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+    public SquareAction run(SquareView squareView) {
 
         //if there's a bad guy, attack one most away from "from"
-        List<Direction> enemies = SquareLogicUtilities.getEnemyDirections(view, magicSquare.getPlayer());
+        List<Direction> enemies = squareView.getEnemyDirections();
         if(!enemies.isEmpty()){
             //TODO attack the farthest from "from"
             return SquareAction.attack(enemies.get(0), this);
         }
 
-        List<Direction> emptySquares = SquareLogicUtilities.getEmptyDirections(view);
+        List<Direction> emptySquares = squareView.getEmptyDirections();
         //if there's only good guys, wait
         if(emptySquares.isEmpty()){
             return SquareAction.wait(this);
         }
 
         //if there's only one square and it's the from... fork.
-        final List<Direction> friends = SquareLogicUtilities.getFriendlyDirections(view, magicSquare.getPlayer());
+        final List<Direction> friends = squareView.getFriendlyDirections();
         if(friends.size() == 1 && friends.contains(from)){
 
             //to fork or not to fork
@@ -75,7 +76,7 @@ public class Mycelium extends SquareLogic {
                     return SquareAction.replicate(to, this, new Mycelium(DirectionUtils.opposite(to)));
                 }//if we've bumpped into someone
                 else if(friends.contains(DirectionUtils.opposite(from))){
-                    Direction to = preferredOrRandom(SquareLogicUtilities.getEmptyDirections(view), DirectionUtils.opposite(from));
+                    Direction to = preferredOrRandom(squareView.getEmptyDirections(), DirectionUtils.opposite(from));
                     return SquareAction.replicate(to, this, new Mycelium(DirectionUtils.opposite(to)));
                 }//just keep moving along
                 else {
@@ -100,7 +101,7 @@ public class Mycelium extends SquareLogic {
             return SquareAction.wait(this);
         }
 
-        Direction to = preferredOrRandom(SquareLogicUtilities.getEmptyDirections(view), DirectionUtils.opposite(from));
+        Direction to = preferredOrRandom(squareView.getEmptyDirections(), DirectionUtils.opposite(from));
         return SquareAction.replicate(to, this, new Mycelium(DirectionUtils.opposite(to)));
 
     }

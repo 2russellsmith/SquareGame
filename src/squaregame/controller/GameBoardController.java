@@ -115,7 +115,7 @@ public class GameBoardController {
                         }
                     } else {
                         final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic()
-                                .run(this.gameBoard.get(i, j), i, j, this.gameBoard.getView(i, j));
+                                .run(this.gameBoard.getView(i, j));
                         switch (squareAction.getAction()) {
                             case ATTACK:
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {

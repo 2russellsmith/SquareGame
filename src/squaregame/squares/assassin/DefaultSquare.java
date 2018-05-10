@@ -4,6 +4,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -20,9 +21,9 @@ public class DefaultSquare extends SquareLogic {
     private static final Set<Direction> VALID_DIRECTIONS = new HashSet<>(Arrays.asList(Direction.W, Direction.S, Direction.SW));
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+    public SquareAction run(SquareView squareView) {
 
-        final Optional<Direction> direction =  SquareLogicUtilities.getEmptyDirections(view).stream().filter(VALID_DIRECTIONS::contains).findAny();
+        final Optional<Direction> direction =  squareView.getEmptyDirections().stream().filter(VALID_DIRECTIONS::contains).findAny();
 
         return direction.map(d -> SquareAction.replicate(d, this, new AssassinSquare(Direction.values()[aliveTurn++ % 8])))
                 .orElseGet(() -> SquareAction.wait(this));

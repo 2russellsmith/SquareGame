@@ -7,6 +7,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -23,9 +24,9 @@ public class Spore extends SquareLogic {
     }
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
+    public SquareAction run(SquareView squareView) {
         //move if clear
-        if(countDown > 0 && SquareLogicUtilities.getEmptyDirections(view).contains(to)){
+        if(countDown > 0 && squareView.getEmptyDirections().contains(to)){
             countDown--;
             return SquareAction.move(to, this);
         }

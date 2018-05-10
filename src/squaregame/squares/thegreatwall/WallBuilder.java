@@ -4,6 +4,7 @@ import squaregame.model.Direction;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 import squaregame.utils.SquareLogicUtilities;
 
@@ -26,8 +27,8 @@ public class WallBuilder extends SquareLogic {
     }
 
     @Override
-    public SquareAction run(MagicSquare magicSquare, int row, int col, List<Player> view) {
-        final Optional<Direction> direction = SquareLogicUtilities.getEnemyDirections(view, magicSquare.getPlayer()).stream().findAny();
+    public SquareAction run(SquareView squareView) {
+        final Optional<Direction> direction = squareView.getEnemyDirections().stream().findAny();
         if (direction.isPresent()) {
             return SquareAction.attack(direction.get(), this);
         }
@@ -39,7 +40,7 @@ public class WallBuilder extends SquareLogic {
                     new WallBuilder(1, SquareLogicUtilities.getOppositeDirection(getMovingDirection()), true),
                     new WallBuilder(1, getMovingDirection(), true));
         }
-        if (view.get(this.moveDirection.ordinal()) == null) {
+        if (squareView.getLocation(this.moveDirection) == null) {
             if (movesLeft > 0) {
                 movesLeft--;
                 return SquareAction.move(this.moveDirection, this);
