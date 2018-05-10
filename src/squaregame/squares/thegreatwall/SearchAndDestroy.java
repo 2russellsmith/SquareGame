@@ -15,13 +15,13 @@ public class SearchAndDestroy extends SquareLogic {
     public SquareAction run(SquareView squareView) {
         final Optional<Direction> direction = squareView.getEnemyDirections().stream().findAny();
         if (direction.isPresent()) {
-            return SquareAction.attack(direction.get(), this);
+            return attack(direction.get());
         }
         final Direction moveDirection = DefaultSquare.startingDirection.rotateClockwise(Math.floorMod(turn++ / 150, 8) + 1);
         if (squareView.getLocation(moveDirection) == null) {
-            return SquareAction.move(moveDirection, this);
+            return move(moveDirection);
         } else {
-            return SquareAction.wait(this);
+            return Wait();
         }
     }
 

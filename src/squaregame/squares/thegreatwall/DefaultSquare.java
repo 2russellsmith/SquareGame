@@ -17,7 +17,7 @@ public class DefaultSquare extends SquareLogic {
         final Random random = new Random();
         startingDirection = Direction.values()[random.nextInt(8)];
         final Optional<Direction> direction = squareView.getEnemyDirections().stream().findAny();
-        return direction.map(direction1 -> SquareAction.attack(direction1, this))
+        return direction.map(this::attack)
                 .orElseGet(() -> SquareAction.replicate(startingDirection,
                         new WallBuilder(1, startingDirection.getOppositeDirection(), false),
                         new WallBuilder(1, startingDirection, false)));

@@ -46,7 +46,7 @@ public class WallBuilder extends SquareLogic {
                         new WallBuilder(generation + 1, this.moveDirection, this.directionChange));
             }
         } else {
-            return SquareAction.wait(this);
+            return Wait();
         }
     }
 
