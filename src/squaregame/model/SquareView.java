@@ -9,12 +9,14 @@ public class SquareView {
     private Player player;
     private int row;
     private int col;
+    private int roundNumber;
 
-    public SquareView(List<Player> view, Player player, int row, int col) {
+    public SquareView(List<Player> view, Player player, int row, int col, int roundNumber) {
         this.view = view;
         this.player = player;
         this.row = row;
         this.col = col;
+        this.roundNumber = roundNumber;
     }
 
     public List<Direction> getEmptyDirections() {
@@ -56,5 +58,9 @@ public class SquareView {
 
     public int getCol() {
         return this.col;
+    }
+
+    public int getRoundNumber() {
+        return roundNumber;
     }
 }
