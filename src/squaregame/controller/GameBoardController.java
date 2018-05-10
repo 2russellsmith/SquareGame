@@ -102,7 +102,7 @@ public class GameBoardController {
         final List<Location> squareDeletes = new ArrayList<>();
         final Map<Player, Score> currentScore = new HashMap<>();
         this.gameState.getPlayerList().forEach(p -> currentScore.put(p, new Score()));
-        for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int i = 0; i < this.gameBoard.getBoardSize(); i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 if (this.gameBoard.get(i, j) != null) {
                     currentScore.get(this.gameBoard.get(i, j).getPlayer()).addPoint();
