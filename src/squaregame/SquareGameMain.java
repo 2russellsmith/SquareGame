@@ -47,9 +47,7 @@ public class SquareGameMain extends JFrame {
         jPanel.add(aiSelectorPanel, LEFT_ALIGNMENT);
         jPanel.add(this.leaderboardPanel, LEFT_ALIGNMENT);
         this.getContentPane().add(jPanel, BorderLayout.LINE_END);
-        final int boardWidth = GameBoardView.SQUARE_SIZE * gameBoardController.getGameBoard().getBoardSize();
-        final int boardHeight = boardWidth;
-        gameBoardView.setPreferredSize(new Dimension(boardWidth, boardHeight));
+        gameBoardView.setPreferredSize(new Dimension(GameBoardView.MAX_BOARD_SIZE, GameBoardView.MAX_BOARD_SIZE));
         this.setMinimumSize(new Dimension(830, 660));
     }
 

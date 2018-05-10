@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class GameState {
     private int roundNumber;
-    private int MAX_PLAYERS = 8;
+    private int totalRounds = 3000;
 
     private List<Player> playerList;
     private List<AIOption> aiOptions;
@@ -54,11 +54,12 @@ public class GameState {
 
     }
 
+    public void setTotalRounds(int totalRounds) {
+        this.totalRounds = totalRounds;
+    }
+
     public String printGameState() {
         return "Round: " + roundNumber + "\n" + printScore();
-    }
-    public String endGame() {
-        return playerList.stream().max(Comparator.comparing(p -> scoreBoard.get(p).getScore())).get().getName() + " WINS THE GAME!!!";
     }
 
     public boolean someoneWon() {
@@ -118,5 +119,9 @@ public class GameState {
                 this.leaderboard.getWins(aiOption.getId()) +
                         "(" + this.leaderboard.getWinRate(aiOption.getId()) + "%)")
                 .collect(Collectors.joining("\n"));
+    }
+
+    public boolean gameOver() {
+        return totalRounds < this.roundNumber || this.someoneWon();
     }
 }
