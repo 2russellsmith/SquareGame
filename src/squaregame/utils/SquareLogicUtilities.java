@@ -26,4 +26,12 @@ public class SquareLogicUtilities {
         }
         return result;
     }
+
+    public static Direction getOppositeDirection(Direction direction) {
+        return getRotatedDirection(direction, 4);
+    }
+
+    public static Direction getRotatedDirection(Direction direction, int turns) {
+        return Direction.values()[(Math.floorMod(direction.ordinal() + turns, 8))];
+    }
 }

@@ -34,7 +34,7 @@ public class GameBoardController {
 
     public GameBoardController(SquareGameMain squareGameMain) {
         this.squareGameMain = squareGameMain;
-        this.timer = new Timer(1, e -> {
+        this.timer = new Timer(0, e -> {
             runRound();
             squareGameMain.repaint();
         });
@@ -45,7 +45,7 @@ public class GameBoardController {
     public void runRound() {
         runAllTurns();
         this.squareGameMain.getGameStatePanel().setText(this.gameState.printGameState());
-        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 50000) {
+        if (this.gameState.someoneWon() || this.gameState.getRoundNumber() >= 3000) {
             this.gameOver();
         }
         this.gameState.nextRound();
