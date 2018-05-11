@@ -26,8 +26,8 @@ public class SquareGameMain extends JFrame {
 
         final GameBoardController gameBoardController = new GameBoardController(this);
         this.activeGamePanel = new ActiveGamePanel(gameBoardController);
-
         this.leaderboardPanel = new LeaderboardPanel(gameBoardController);
+        updateLeaderboards(gameBoardController.getGameState());
 
         tabbedPane.addTab("Active Game", this.activeGamePanel);
         tabbedPane.addTab("Leaderboards", this.leaderboardPanel);
