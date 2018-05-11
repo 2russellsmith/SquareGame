@@ -22,7 +22,7 @@ public class Mycelium extends SquareLogic {
 
     //spread vars
     private int COLINIZATION_RATE = 2;
-    private int sporeCountdownMax = 50;
+    private int sporeCountdownMax = 100;
 
     /**
      * Constructor.
