@@ -7,9 +7,12 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.JLabel;
@@ -51,14 +54,17 @@ public class AISelectorPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("Leaderboard".equals(e.getActionCommand())){
-            final ArrayList<Integer> list = new ArrayList<>();
+            final ArrayList<Integer> aiOptions = new ArrayList<>();
             for (int i = 1; i < this.gameBoardController.getGameState().getAiOptions().size(); i++) {
-                list.add(i);
+                aiOptions.add(i);
             }
-            Collections.shuffle(list);
-            Random random = new Random();
-            for (int i = 0; i < random.nextInt(8); i++) {
-                this.comboBoxes.get(random.nextInt(8)).setSelectedIndex(list.get(i));
+            Collections.shuffle(aiOptions);
+            final int numberOfPlayers = ThreadLocalRandom.current().nextInt(1, 9);
+            final List<Integer> comboBoxIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
+            Collections.shuffle(comboBoxIndex);
+            for (int i = 0; i < numberOfPlayers && i < aiOptions.size(); i++) {
+                final AISelectorComboBox comboBox = this.comboBoxes.get(comboBoxIndex.get(i));
+                comboBox.setSelectedIndex(aiOptions.get(i));
             }
         }
     }
