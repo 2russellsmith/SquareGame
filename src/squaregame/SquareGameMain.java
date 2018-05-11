@@ -1,53 +1,38 @@
 package squaregame;
 
 import squaregame.controller.GameBoardController;
-import squaregame.view.AISelectorPanel;
-import squaregame.view.ButtonPanel;
-import squaregame.view.GameBoardView;
+import squaregame.model.GameState;
+import squaregame.model.Player;
+import squaregame.view.ActiveGamePanel;
+import squaregame.view.LeaderboardPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SquareGameMain extends JFrame {
 
-    private JTextArea gameStatePanel;
-    private JTextArea leaderboardPanel;
+    private ActiveGamePanel activeGamePanel;
+    private LeaderboardPanel leaderboardPanel;
 
     public SquareGameMain() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new CardLayout());
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+
         final GameBoardController gameBoardController = new GameBoardController(this);
-        final GameBoardView gameBoardView = new GameBoardView(gameBoardController);
-        this.gameStatePanel = new JTextArea();
-        this.leaderboardPanel = new JTextArea();
-        this.gameStatePanel.setLayout(new BorderLayout());
-        this.leaderboardPanel.setLayout(new BorderLayout());
-        setTitle("SquareGame");
-        this.gameStatePanel.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.leaderboardPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-        final AISelectorPanel aiSelectorPanel = new AISelectorPanel(gameBoardController);
-        final ButtonPanel buttonPanel = new ButtonPanel(gameBoardController, aiSelectorPanel);
-        this.getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
-        this.getContentPane().add(gameBoardView, BorderLayout.LINE_START);
-        final JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-        jPanel.add(this.gameStatePanel, LEFT_ALIGNMENT);
-        jPanel.add(aiSelectorPanel, LEFT_ALIGNMENT);
-        jPanel.add(this.leaderboardPanel, LEFT_ALIGNMENT);
-        this.getContentPane().add(jPanel, BorderLayout.LINE_END);
-        gameBoardView.setPreferredSize(new Dimension(GameBoardView.MAX_BOARD_SIZE, GameBoardView.MAX_BOARD_SIZE));
+        this.activeGamePanel = new ActiveGamePanel(gameBoardController);
+
+        this.leaderboardPanel = new LeaderboardPanel(gameBoardController);
+
+        tabbedPane.addTab("Active Game", this.activeGamePanel);
+        tabbedPane.addTab("Leaderboards", this.leaderboardPanel);
+
+        this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
         this.setMinimumSize(new Dimension(830, 660));
     }
 
@@ -62,11 +47,24 @@ public class SquareGameMain extends JFrame {
         SwingUtilities.invokeLater(SquareGameMain::new);
     }
 
-    public JTextArea getGameStatePanel() {
-        return gameStatePanel;
+    public void updateLeaderboards(GameState gameState) {
+        this.activeGamePanel.getLeaderboardPanel().setText(gameState.getAiOptions().stream()
+                .filter(Objects::nonNull)
+                .sorted((a1, a2) -> Double.compare(gameState.getLeaderboard().getWinRate(a2.getId()), gameState.getLeaderboard().getWinRate(a1.getId())))
+                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                        gameState.getLeaderboard().getWins(aiOption.getId()) + "/" + gameState.getLeaderboard().getGamesPlayed(aiOption.getId()) +
+                        "(" + gameState.getLeaderboard().getWinRate(aiOption.getId()) + "%)")
+                .collect(Collectors.joining("\n")));
+        this.leaderboardPanel.update(gameState);
     }
 
-    public JTextArea getLeaderboardPanel() {
-        return leaderboardPanel;
+    public void updateGameScore(GameState gameState) {
+        this.activeGamePanel.getGameStatePanel().setSelectionColor(Color.black);
+        this.activeGamePanel.getGameStatePanel().setText("Round: " + gameState.getRoundNumber() + "\n");
+        gameState.getPlayerList().stream().filter(Player::isPlaying)
+                .sorted(Comparator.comparingInt(p1 -> gameState.getScoreBoard().get(p1).getScore()).reversed()).forEach(p -> {
+                    this.activeGamePanel.getGameStatePanel().setCaretColor(p.getColor());
+                    this.activeGamePanel.getGameStatePanel().append(p.getName() + ": " + gameState.getScoreBoard().get(p).getScore() + "\n");
+        });
     }
 }

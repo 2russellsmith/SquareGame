@@ -3,18 +3,15 @@ package squaregame.model;
 import org.reflections.Reflections;
 import squaregame.squares.SquareLogic;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Created by Russell on 5/5/18.
@@ -26,6 +23,8 @@ public class GameState {
     private List<Player> playerList;
     private Map<Player, Set<Player>> whoPlayersBeat;
     private List<AIOption> aiOptions;
+    private boolean freeForAll;
+    private Leaderboard freeForAllLeaderboard;
     private Leaderboard leaderboard;
 
     private Map<Player, Score> scoreBoard;
@@ -47,6 +46,7 @@ public class GameState {
         });
         this.whoPlayersBeat = new HashMap<>();
         this.leaderboard = new Leaderboard(aiOptions.size());
+        this.freeForAllLeaderboard = new Leaderboard(aiOptions.size());
         playerList = new ArrayList<>();
         playerList.add(new Player(Color.RED, aiOptions.get(0)));
         playerList.add(new Player(Color.GREEN, aiOptions.get(0)));
@@ -63,10 +63,6 @@ public class GameState {
         this.totalRounds = totalRounds;
     }
 
-    public String printGameState() {
-        return "Round: " + roundNumber + "\n" + printScore();
-    }
-
     public boolean someoneWon() {
         return playerList.stream().filter(p -> scoreBoard.get(p).getScore() > 0).count() < 2;
     }
@@ -79,8 +75,11 @@ public class GameState {
                 .filter(p -> this.scoreBoard.get(p).getScore() != 0)
                 .sorted(comp)
                 .forEach(loser -> this.whoPlayersBeat.putIfAbsent(loser, new HashSet<>(this.whoPlayersBeat.keySet())));
-        this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.leaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
-
+        if (this.isFreeForAll()) {
+            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.freeForAllLeaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
+        } else {
+            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.leaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
+        }
     }
 
     public void rankNewDeadPlayers() {
@@ -88,10 +87,6 @@ public class GameState {
                 .filter(Player::isPlaying)
                 .filter(p -> this.scoreBoard.get(p).getScore() == 0)
                 .forEach(loser -> this.whoPlayersBeat.putIfAbsent(loser, new HashSet<>(this.whoPlayersBeat.keySet())));
-    }
-
-    public String printScore() {
-        return playerList.stream().filter(Player::isPlaying).map(p -> p.getName() + ": " + scoreBoard.get(p).getScore()).collect(Collectors.joining("\n"));
     }
 
     public int getRoundNumber() {
@@ -123,23 +118,23 @@ public class GameState {
         return leaderboard;
     }
 
-    public String printLeaderBoard() {
-        final List<AIOption> results = aiOptions.stream()
-                .filter(Objects::nonNull)
-                .sorted((a1, a2) -> Double.compare(this.leaderboard.getWinRate(a2.getId()), this.leaderboard.getWinRate(a1.getId())))
-                .collect(Collectors.toList());
-        return results.stream().filter(Objects::nonNull)
-                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
-                this.leaderboard.getWins(aiOption.getId()) +
-                        "(" + this.leaderboard.getWinRate(aiOption.getId()) + "%)")
-                .collect(Collectors.joining("\n"));
-    }
-
-    public Map<Player, Set<Player>> getWhoPlayersBeat() {
-        return this.whoPlayersBeat;
-    }
-
     public boolean gameOver() {
         return totalRounds < this.roundNumber || this.someoneWon();
+    }
+
+    public boolean isFreeForAll() {
+        return this.freeForAll;
+    }
+
+    public void setIsFreeForAll(boolean freeForAll) {
+        this.freeForAll = freeForAll;
+    }
+
+    public Leaderboard getFreeForAllLeaderboard() {
+        return freeForAllLeaderboard;
+    }
+
+    public Map<Player, Score> getScoreBoard() {
+        return scoreBoard;
     }
 }

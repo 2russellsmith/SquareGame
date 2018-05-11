@@ -28,6 +28,10 @@ public class Leaderboard {
         }
     }
 
+    public int getGamesPlayed(int aiId) {
+        return getWins(aiId) + getLosses(aiId);
+    }
+
     private int getLosses(int aiId) {
         return Arrays.stream(this.scoreboard).mapToInt(loss -> loss[aiId]).sum();
     }

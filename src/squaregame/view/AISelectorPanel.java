@@ -2,21 +2,16 @@ package squaregame.view;
 
 import squaregame.controller.GameBoardController;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class AISelectorPanel extends JPanel implements ActionListener {
 
@@ -59,7 +54,14 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                 aiOptions.add(i);
             }
             Collections.shuffle(aiOptions);
-            final int numberOfPlayers = ThreadLocalRandom.current().nextInt(1, 9);
+            final int numberOfPlayers;
+            if (ThreadLocalRandom.current().nextBoolean()) {
+                this.gameBoardController.getGameState().setIsFreeForAll(false);
+                numberOfPlayers = 2;
+            } else {
+                this.gameBoardController.getGameState().setIsFreeForAll(true);
+                numberOfPlayers = ThreadLocalRandom.current().nextInt(3, 9);
+            }
             final List<Integer> comboBoxIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
             Collections.shuffle(comboBoxIndex);
             for (int i = 0; i < numberOfPlayers && i < aiOptions.size(); i++) {

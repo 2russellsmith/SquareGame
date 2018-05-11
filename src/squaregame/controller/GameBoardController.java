@@ -12,14 +12,12 @@ import squaregame.model.Score;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.swing.JButton;
-import javax.swing.Timer;
 
 public class GameBoardController {
 
@@ -46,7 +44,7 @@ public class GameBoardController {
 
     public void runRound() {
         runAllTurns();
-        this.squareGameMain.getGameStatePanel().setText(this.gameState.printGameState());
+        this.squareGameMain.updateGameScore(this.gameState);
         if (this.gameState.gameOver()) {
             this.gameOver();
         }
@@ -57,7 +55,7 @@ public class GameBoardController {
         this.timer.stop();
         if (isLeaderBoardMode) {
             this.gameState.finalRank();
-            this.squareGameMain.getLeaderboardPanel().setText(this.gameState.printLeaderBoard());
+            this.squareGameMain.updateLeaderboards(this.gameState);
             this.runLeaderboardRoundButton.doClick();
         }
 
@@ -67,10 +65,10 @@ public class GameBoardController {
         if (this.gameState.getRoundNumber() == 0) {
             if (gameState.getPlayerList().stream().filter(Player::isPlaying).count() > 3) {
                 this.gameBoard = new GameBoard(300);
-                this.gameState.setTotalRounds(4000);
+                this.gameState.setTotalRounds(300);
             } else {
                 this.gameBoard = new GameBoard(150);
-                this.gameState.setTotalRounds(3000);
+                this.gameState.setTotalRounds(200);
             }
             setStartingPositions();
             if (isLeaderBoardMode) {
