@@ -5,3 +5,5 @@
 /out
 /target
 /target/*
+
+!/out/artifacts/SquareGame_jar/SquareGame.jar
