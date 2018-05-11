@@ -1,4 +1,4 @@
-package squaregame.squares.fungi;
+package squaregame.squares.fungi.v1;
 
 import squaregame.model.Direction;
 import squaregame.model.SquareAction;
@@ -30,6 +30,6 @@ public class DefaultSquare extends SquareLogic {
      */
     @Override
     public String getSquareName() {
-        return "Fungi";
+        return "Fungi-1.1";
     }
 }

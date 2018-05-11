@@ -1,4 +1,4 @@
-package squaregame.squares.fungi;
+package squaregame.squares.fungi.v1;
 
 import squaregame.model.Direction;
 import squaregame.model.SquareAction;
@@ -7,14 +7,18 @@ import squaregame.squares.SquareLogic;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import squaregame.squares.fungi.DirectionUtils;
 
 /**
  * Mycelium.
  */
 public class Mycelium extends SquareLogic {
 
+    private int attackCountdown = 0;
+    private int attackCountdownMax = 100;
+
     private Direction from;
-    private int COLINIZATION_RATE = 4;
+    private int COLINIZATION_RATE = 3;
     private int sporeCountdownMax = 50;
 
     private static int FORK_RATE = 4;
@@ -50,6 +54,7 @@ public class Mycelium extends SquareLogic {
         List<Direction> emptySquares = squareView.getEmptyDirections();
         //if there's only good guys, wait
         if(emptySquares.isEmpty()){
+            attackCountdown = attackCountdownMax;
             return SquareAction.wait(this);
         }
 
@@ -81,6 +86,14 @@ public class Mycelium extends SquareLogic {
                 }
         }
 
+        //a square just opened nearby, attack it.
+        if(emptySquares.size() > 0 && attackCountdown > 0){
+            attackCountdown--;
+            Direction attackDirection = preferredOrRandom(emptySquares, DirectionUtils.opposite(from));
+            from = DirectionUtils.opposite(attackDirection);//start looking at the attack direction.
+            return SquareAction.attack(attackDirection, this);
+        }
+
         //Starting to get saturated
         if(emptySquares.size() == 3) {
             //to colonize or not to colonize
@@ -91,7 +104,7 @@ public class Mycelium extends SquareLogic {
         }
 
         //In saturated state, back off
-        if(emptySquares.size() <= 3){
+        if(emptySquares.size() <= 5){
             if(ThreadLocalRandom.current().nextInt(0, 8) == 0){
                 return SquareAction.replicate(emptySquares.get(0), this, new Mycelium(DirectionUtils.opposite(emptySquares.get(0))));
             }

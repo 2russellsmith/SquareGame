@@ -1,9 +1,10 @@
-package squaregame.squares.fungi;
+package squaregame.squares.fungi.v1;
 
 import squaregame.model.Direction;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
+import squaregame.squares.fungi.DirectionUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
