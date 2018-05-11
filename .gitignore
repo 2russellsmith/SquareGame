@@ -6,4 +6,4 @@
 /target
 /target/*
 
-!/out/artifacts/SquareGame_jar/SquareGame.jar
+!out/artifacts/SquareGame_jar/SquareGame.jar
