@@ -30,6 +30,6 @@ public class DefaultSquare extends SquareLogic {
      */
     @Override
     public String getSquareName() {
-        return "Fungi-1.1";
+        return "Fungi";
     }
 }

@@ -20,6 +20,6 @@ public class DefaultSquare extends SquareLogic {
      */
     @Override
     public String getSquareName() {
-        return "Fungi-2.0";
+        return "Penicillin";
     }
 }
