@@ -26,8 +26,9 @@ public class SuicideSpore extends SquareLogic {
         //if there's a bad guy, attack one most away from "from"
         List<Direction> enemies = squareView.getEnemyDirections();
         if(!enemies.isEmpty()){
-            //TODO attack the farthest from "from"
-            return SquareAction.attack(enemies.get(0), this);
+            Direction enemy = enemies.get(ThreadLocalRandom.current().nextInt(0, enemies.size()));
+            to = enemy;
+            return SquareAction.attack(enemy, this);
         }
 
         //move if clear
