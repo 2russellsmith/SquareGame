@@ -11,12 +11,13 @@ public class WallBuilder extends SquareLogic {
 
     private final boolean directionChange;
     private int generation;
+    private int endSize;
     private double movesLeft;
     private Direction moveDirection;
-    private int endSize = 128;
 
-    public WallBuilder(int generation, Direction moveDirection, boolean directionChange) {
+    public WallBuilder(int generation, Direction moveDirection, boolean directionChange, int boardSize) {
         this.generation = generation;
+        this.endSize = (int) Math.pow(2, Math.floor(Math.log(boardSize) / Math.log(2)));
         this.movesLeft = endSize / (Math.pow(2, generation + 1)) - 1;
         this.moveDirection = moveDirection;
         this.directionChange = directionChange;
@@ -33,8 +34,8 @@ public class WallBuilder extends SquareLogic {
                 return SquareAction.wait(new SearchAndDestroy());
             }
             return SquareAction.replicate(getMovingDirection(),
-                    new WallBuilder(1, getMovingDirection().getOppositeDirection(), true),
-                    new WallBuilder(1, getMovingDirection(), true));
+                    new WallBuilder(1, getMovingDirection().getOppositeDirection(), true, squareView.getPlayerAllowedMetadata().getBoardSize()),
+                    new WallBuilder(1, getMovingDirection(), true, squareView.getPlayerAllowedMetadata().getBoardSize()));
         }
         if (squareView.getLocation(this.moveDirection) == null) {
             if (movesLeft > 0) {
@@ -42,8 +43,8 @@ public class WallBuilder extends SquareLogic {
                 return SquareAction.move(this.moveDirection, this);
             } else {
                 return SquareAction.replicate(this.moveDirection,
-                        new WallBuilder(generation + 1, this.moveDirection.getOppositeDirection(), this.directionChange),
-                        new WallBuilder(generation + 1, this.moveDirection, this.directionChange));
+                        new WallBuilder(generation + 1, this.moveDirection.getOppositeDirection(), this.directionChange, squareView.getPlayerAllowedMetadata().getBoardSize()),
+                        new WallBuilder(generation + 1, this.moveDirection, this.directionChange, squareView.getPlayerAllowedMetadata().getBoardSize()));
             }
         } else {
             return Wait();

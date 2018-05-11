@@ -14,7 +14,7 @@ public class GameBoard {
         this.squares = new MagicSquare[boardSize][boardSize];
     }
 
-    public SquareView getView(int i, int j) {
+    public List<Player> getView(int i, int j) {
         final List<Player> view = new ArrayList<>();
         view.add(0, getPlayer(i, j, Direction.NW));
         view.add(1, getPlayer(i, j, Direction.N));
@@ -24,7 +24,7 @@ public class GameBoard {
         view.add(5, getPlayer(i, j, Direction.S));
         view.add(6, getPlayer(i, j, Direction.SW));
         view.add(7, getPlayer(i, j, Direction.W));
-        return new SquareView(view, getPlayer(i, j, Direction.CENTER), i, j);
+        return view;
     }
 
     public Player getPlayer(int i, int j, Direction direction) {

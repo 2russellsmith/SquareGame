@@ -19,8 +19,8 @@ public class DefaultSquare extends SquareLogic {
         final Optional<Direction> direction = squareView.getEnemyDirections().stream().findAny();
         return direction.map(this::attack)
                 .orElseGet(() -> SquareAction.replicate(startingDirection,
-                        new WallBuilder(1, startingDirection.getOppositeDirection(), false),
-                        new WallBuilder(1, startingDirection, false)));
+                        new WallBuilder(1, startingDirection.getOppositeDirection(), false, squareView.getPlayerAllowedMetadata().getBoardSize()),
+                        new WallBuilder(1, startingDirection, false, squareView.getPlayerAllowedMetadata().getBoardSize())));
     }
 
     @Override

@@ -7,11 +7,12 @@ import squaregame.model.GameState;
 import squaregame.model.Location;
 import squaregame.model.MagicSquare;
 import squaregame.model.Player;
+import squaregame.model.PlayerAllowedMetadata;
 import squaregame.model.Score;
 import squaregame.model.SquareAction;
+import squaregame.model.SquareView;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,9 @@ public class GameBoardController {
                         }
                     } else {
                         final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic()
-                                .run(this.gameBoard.getView(i, j));
+                                .run(new SquareView(this.gameBoard.getView(i, j),
+                                        this.gameBoard.getPlayer(i, j, Direction.CENTER), i, j,
+                                        new PlayerAllowedMetadata(this.gameBoard.getBoardSize())));
                         switch (squareAction.getAction()) {
                             case ATTACK:
                                 if (updatedGameBoard.get(i, j, Direction.CENTER) == null) {

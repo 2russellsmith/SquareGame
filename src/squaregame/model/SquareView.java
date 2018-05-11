@@ -9,12 +9,14 @@ public class SquareView {
     private Player player;
     private int row;
     private int col;
+    private PlayerAllowedMetadata playerAllowedMetadata;
 
-    public SquareView(List<Player> view, Player player, int row, int col) {
+    public SquareView(List<Player> view, Player player, int row, int col, PlayerAllowedMetadata playerAllowedMetadata) {
         this.view = view;
         this.player = player;
         this.row = row;
         this.col = col;
+        this.playerAllowedMetadata = playerAllowedMetadata;
     }
 
     public List<Direction> getEmptyDirections() {
@@ -58,4 +60,7 @@ public class SquareView {
         return this.col;
     }
 
+    public PlayerAllowedMetadata getPlayerAllowedMetadata() {
+        return playerAllowedMetadata;
+    }
 }
