@@ -65,10 +65,10 @@ public class GameBoardController {
         if (this.gameState.getRoundNumber() == 0) {
             if (gameState.getPlayerList().stream().filter(Player::isPlaying).count() > 3) {
                 this.gameBoard = new GameBoard(300);
-                this.gameState.setTotalRounds(300);
+                this.gameState.setTotalRounds(3000);
             } else {
                 this.gameBoard = new GameBoard(150);
-                this.gameState.setTotalRounds(200);
+                this.gameState.setTotalRounds(2000);
             }
             setStartingPositions();
             if (isLeaderBoardMode) {
