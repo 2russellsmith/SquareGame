@@ -1,4 +1,4 @@
-package squaregame.squares.laraza.v1;
+package squaregame.squares.laraza;
 
 import squaregame.model.Direction;
 import squaregame.model.SquareAction;
