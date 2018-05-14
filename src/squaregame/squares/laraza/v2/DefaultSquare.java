@@ -16,8 +16,6 @@ public class DefaultSquare extends SquareLogic {
 
     @Override
     public SquareAction run(SquareView squareView) {
-        System.out.println(this.getClass().getSimpleName());
-
         // Kill if possible
         final List<Direction> attackDirections = squareView.getEnemyDirections();
         if (!attackDirections.isEmpty()) {
