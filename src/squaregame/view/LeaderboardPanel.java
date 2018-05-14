@@ -1,31 +1,47 @@
 package squaregame.view;
 
-import com.sun.deploy.panel.JSmartTextArea;
 import squaregame.controller.GameBoardController;
 import squaregame.model.GameState;
 
-import javax.swing.*;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * Created by Russell on 5/10/18.
  */
 public class LeaderboardPanel extends JPanel {
 
-    JSmartTextArea oneVsOneLeaderboard;
-    JSmartTextArea freeForAllLeaderboard;
+    private JTextArea oneVsOneLeaderboard;
+    private JTextArea freeForAllLeaderboard;
 
     public LeaderboardPanel(GameBoardController gameBoardController) {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        this.oneVsOneLeaderboard = new JSmartTextArea();
-        this.add(oneVsOneLeaderboard);
-        this.freeForAllLeaderboard = new JSmartTextArea();
+        this.oneVsOneLeaderboard = new JTextArea();
+        this.freeForAllLeaderboard = new JTextArea();
+
+        this.oneVsOneLeaderboard.setEditable(false);
+        this.oneVsOneLeaderboard.setLineWrap(true);
+        this.oneVsOneLeaderboard.setWrapStyleWord(true);
+        this.oneVsOneLeaderboard.setFocusable(false);
+        this.oneVsOneLeaderboard.setRows(0);
+        this.oneVsOneLeaderboard.invalidate();
+
+        this.freeForAllLeaderboard.setEditable(false);
+        this.freeForAllLeaderboard.setLineWrap(true);
+        this.freeForAllLeaderboard.setWrapStyleWord(true);
+        this.freeForAllLeaderboard.setFocusable(false);
+        this.freeForAllLeaderboard.setRows(0);
+        this.freeForAllLeaderboard.invalidate();
         this.add(freeForAllLeaderboard);
+        this.add(oneVsOneLeaderboard);
     }
 
     public void update(GameState gameState) {
-        String status = gameState.getAiOptions().stream()
+        final String status = gameState.getAiOptions().stream()
                 .filter(Objects::nonNull)
                 .sorted((a1, a2) -> Double.compare(gameState.getLeaderboard().getWinRate(a2.getId()), gameState.getLeaderboard().getWinRate(a1.getId())))
                 .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
@@ -33,7 +49,7 @@ public class LeaderboardPanel extends JPanel {
                         " (" + gameState.getLeaderboard().getWinRate(aiOption.getId()) + "%)")
                 .collect(Collectors.joining("\n"));
         this.oneVsOneLeaderboard.setText("One Vs One Standings \n\n\n" + status);
-        String freeForAll = gameState.getAiOptions().stream()
+        final String freeForAll = gameState.getAiOptions().stream()
                 .filter(Objects::nonNull)
                 .sorted((a1, a2) -> Double.compare(gameState.getFreeForAllLeaderboard().getWinRate(a2.getId()), gameState.getFreeForAllLeaderboard().getWinRate(a1.getId())))
                 .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +

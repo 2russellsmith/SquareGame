@@ -1,29 +1,47 @@
 package squaregame.view;
 
-import com.sun.deploy.panel.JSmartTextArea;
 import squaregame.controller.GameBoardController;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * Created by Russell on 5/10/18.
  */
 public class ActiveGamePanel extends JPanel {
 
-    private JSmartTextArea gameStatePanel;
-    private JSmartTextArea leaderboardPanel;
+    private JTextArea gameStatePanel;
+    private JTextArea leaderboardPanel;
 
     public ActiveGamePanel(GameBoardController gameBoardController)  {
 
         this.setLayout(new BorderLayout());
         final GameBoardView gameBoardView = new GameBoardView(gameBoardController);
-        this.gameStatePanel = new JSmartTextArea();
-        this.leaderboardPanel = new JSmartTextArea();
+        this.gameStatePanel = new JTextArea();
+
+        this.gameStatePanel.setEditable(false);
+        this.gameStatePanel.setLineWrap(true);
+        this.gameStatePanel.setWrapStyleWord(true);
+        this.gameStatePanel.setFocusable(false);
+        this.gameStatePanel.setRows(0);
+        this.gameStatePanel.invalidate();
+        this.leaderboardPanel = new JTextArea();
+
+        this.leaderboardPanel.setEditable(false);
+        this.leaderboardPanel.setLineWrap(true);
+        this.leaderboardPanel.setWrapStyleWord(true);
+        this.leaderboardPanel.setFocusable(false);
+        this.leaderboardPanel.setRows(0);
+        this.leaderboardPanel.invalidate();
+
         this.gameStatePanel.setColumns(10);
-        this.gameStatePanel.setRows(10);
         this.leaderboardPanel.setColumns(10);
-        this.leaderboardPanel.setRows(10);
         this.gameStatePanel.setLayout(new BorderLayout());
         this.leaderboardPanel.setLayout(new BorderLayout());
         this.gameStatePanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -41,11 +59,11 @@ public class ActiveGamePanel extends JPanel {
         gameBoardView.setPreferredSize(new Dimension(GameBoardView.MAX_BOARD_SIZE, GameBoardView.MAX_BOARD_SIZE));
     }
 
-    public JSmartTextArea getGameStatePanel() {
+    public JTextArea getGameStatePanel() {
         return gameStatePanel;
     }
 
-    public JSmartTextArea getLeaderboardPanel() {
+    public JTextArea getLeaderboardPanel() {
         return leaderboardPanel;
     }
 }
