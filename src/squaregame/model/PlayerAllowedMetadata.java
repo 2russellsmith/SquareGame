@@ -7,6 +7,7 @@ public class PlayerAllowedMetadata {
 
     public PlayerAllowedMetadata(int boardSize, int roundNumber) {
         this.boardSize = boardSize;
+        this.roundNumber = roundNumber;
     }
 
     public int getBoardSize() {
@@ -14,6 +15,6 @@ public class PlayerAllowedMetadata {
     }
 
     public int getRoundNumber() {
-
+        return this.roundNumber;
     }
 }
