@@ -37,7 +37,7 @@ public class GameBoardView extends JComponent {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {
                 if (this.gameBoardController.getGameBoard().get(i, j) != null) {
                     g2.setColor(this.gameBoardController.getGameBoard().get(i, j).getPlayer().getColor());
-                    g2.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                    g2.fill3DRect(i * squareSize, j * squareSize, squareSize, squareSize, true);
                 }
             }
         }
