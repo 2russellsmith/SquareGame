@@ -1,5 +1,6 @@
 package squaregame.model;
 
+import lombok.Getter;
 import squaregame.squares.SquareLogic;
 import squaregame.view.AISelectorComboBox;
 
@@ -10,13 +11,16 @@ import java.awt.event.ActionListener;
 /**
  * Created by Russell on 5/5/18.
  */
+@Getter
 public class Player implements ActionListener {
     private Color color;
+    private Color textColor;
     private AIOption aiOption;
 
-    public Player (Color color, AIOption aiOption) {
+    public Player (Color color, Color textColor, AIOption aiOption) {
         this.color = color;
         this.aiOption = aiOption;
+        this.textColor = textColor;
     }
 
     public Player (Player player) {

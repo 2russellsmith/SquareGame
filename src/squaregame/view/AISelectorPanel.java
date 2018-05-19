@@ -6,6 +6,8 @@ import squaregame.model.Player;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -19,9 +21,11 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 @Getter
 public class AISelectorPanel extends JPanel implements ActionListener {
@@ -45,6 +49,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
         this.roundLabel.setForeground(Color.WHITE);
         add(roundLabel, roundc);
         this.setBackground(Color.BLACK);
+        final int borderSize = 2;
         this.gameBoardController.getGameState().getPlayerList().forEach(p -> {
 
             GridBagConstraints c = new GridBagConstraints();
@@ -53,7 +58,9 @@ public class AISelectorPanel extends JPanel implements ActionListener {
             c.gridy = row.getAndIncrement();
             final AISelectorComboBox aiSelectorComboBox = new AISelectorComboBox(gameBoardController);
             aiSelectorComboBox.setEditable(true);
+            aiSelectorComboBox.setBorder(BorderFactory.createMatteBorder(borderSize, borderSize * 2, borderSize, 0, p.getColor().darker()));
             aiSelectorComboBox.getEditor().getEditorComponent().setBackground(p.getColor());
+            aiSelectorComboBox.getEditor().getEditorComponent().setForeground(p.getTextColor());
 
             comboBoxes.add(aiSelectorComboBox);
             add(aiSelectorComboBox, c);
@@ -61,7 +68,9 @@ public class AISelectorPanel extends JPanel implements ActionListener {
             c.gridx = 1;
             final JPanel cont = new JPanel();
             final JLabel score = new JLabel("Score=");
+            cont.setBorder(BorderFactory.createMatteBorder(borderSize, 0, borderSize, borderSize, p.getColor().darker()));
             score.setHorizontalAlignment(SwingConstants.LEFT);
+            score.setForeground(p.getTextColor());
             cont.setBackground(p.getColor());
             cont.add(score);
             score.setPreferredSize(new Dimension(100, 20));
@@ -69,6 +78,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
 
             c.gridx = 2;
             final PlayerView playerView = new PlayerView(score, p);
+            playerView.setBorder(BorderFactory.createMatteBorder(borderSize, 0, borderSize, borderSize * 2, p.getColor().darker()));
             aiSelectorComboBox.addActionListener(p);
             add(playerView, c);
             playerViewMap.put(p, playerView);

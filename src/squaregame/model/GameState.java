@@ -49,14 +49,14 @@ public class GameState {
         this.freeForAllLeaderboard = new Leaderboard(aiOptions.size());
         this.scoreBoard = new HashMap<>();
         playerList = new ArrayList<>();
-        playerList.add(new Player(Color.RED, aiOptions.get(0)));
-        playerList.add(new Player(Color.GREEN, aiOptions.get(0)));
-        playerList.add(new Player(Color.BLUE, aiOptions.get(0)));
-        playerList.add(new Player(Color.PINK, aiOptions.get(0)));
-        playerList.add(new Player(Color.YELLOW, aiOptions.get(0)));
-        playerList.add(new Player(Color.ORANGE, aiOptions.get(0)));
-        playerList.add(new Player(Color.CYAN, aiOptions.get(0)));
-        playerList.add(new Player(Color.MAGENTA, aiOptions.get(0)));
+        playerList.add(new Player(new Color(255, 0, 0), Color.WHITE, aiOptions.get(0)));
+        playerList.add(new Player(new Color(255, 255 / 2, 0), Color.BLACK, aiOptions.get(0)));
+        playerList.add(new Player(new Color(0, 0, 255), Color.WHITE, aiOptions.get(0)));
+        playerList.add(new Player(new Color(255, 255, 0), Color.BLACK, aiOptions.get(0)));
+        playerList.add(new Player(new Color(128, 0, 128), Color.WHITE, aiOptions.get(0)));
+        playerList.add(new Player(new Color(0, 255, 0), Color.BLACK, aiOptions.get(0)));
+        playerList.add(new Player(new Color(100, 100, 100), Color.WHITE, aiOptions.get(0)));
+        playerList.add(new Player(new Color(255, 255, 255), Color.BLACK, aiOptions.get(0)));
 
     }
 
