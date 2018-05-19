@@ -49,8 +49,9 @@ public class GameBoardController {
         this.squareGameMain.updateGameScore(this.gameState);
         if (this.gameState.gameOver()) {
             this.gameOver();
+        } else {
+            this.gameState.nextRound();
         }
-        this.gameState.nextRound();
     }
 
     private void gameOver() {
