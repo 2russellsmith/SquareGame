@@ -47,6 +47,7 @@ public class GameState {
         this.whoPlayersBeat = new HashMap<>();
         this.leaderboard = new Leaderboard(aiOptions.size());
         this.freeForAllLeaderboard = new Leaderboard(aiOptions.size());
+        this.scoreBoard = new HashMap<>();
         playerList = new ArrayList<>();
         playerList.add(new Player(Color.RED, aiOptions.get(0)));
         playerList.add(new Player(Color.GREEN, aiOptions.get(0)));
@@ -96,6 +97,7 @@ public class GameState {
     public void reset() {
         roundNumber = 0;
         this.whoPlayersBeat = new HashMap<>();
+        getPlayerList().forEach(p -> scoreBoard.put(p, new Score()));
     }
 
     public void nextRound() {
@@ -108,10 +110,6 @@ public class GameState {
 
     public List<AIOption> getAiOptions() {
         return aiOptions;
-    }
-
-    public void setScoreBoard(Map<Player, Score> scoreBoard) {
-        this.scoreBoard = scoreBoard;
     }
 
     public Leaderboard getLeaderboard() {

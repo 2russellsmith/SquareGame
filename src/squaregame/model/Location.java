@@ -1,8 +1,11 @@
 package squaregame.model;
 
+import lombok.Getter;
+
 /**
  * Created by Russell on 5/5/18.
  */
+@Getter
 public class Location {
     private int x;
     private int y;
