@@ -2,6 +2,7 @@ package squaregame.view;
 
 import squaregame.controller.GameBoardController;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,6 +19,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
     public ButtonPanel(GameBoardController gameBoardController, AISelectorPanel aiSelectorPanel) {
         this.aiSelectorPanel = aiSelectorPanel;
         this.gameBoardController = gameBoardController;
+        this.setBackground(Color.black);
         startButton = new JButton("Start Game");
         startButton.setVerticalTextPosition(AbstractButton.CENTER);
         startButton.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -65,7 +67,6 @@ public class ButtonPanel extends JPanel implements ActionListener {
             this.gameBoardController.startGame();
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
-            this.aiSelectorPanel.disableAll();
         } else if ("StopGame".equals(e.getActionCommand())){
             this.gameBoardController.stopGame();
             stopButton.setEnabled(false);

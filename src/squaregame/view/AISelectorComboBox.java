@@ -3,6 +3,7 @@ package squaregame.view;
 import squaregame.controller.GameBoardController;
 import squaregame.model.AIOption;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JComboBox;
@@ -22,4 +23,5 @@ public class AISelectorComboBox extends JComboBox<AIOption> {
             this.setSelectedIndex(0);
         }
     }
+
 }

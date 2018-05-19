@@ -3,14 +3,23 @@ package squaregame;
 import squaregame.controller.GameBoardController;
 import squaregame.model.GameState;
 import squaregame.model.Player;
+import squaregame.model.Score;
 import squaregame.view.ActiveGamePanel;
 import squaregame.view.LeaderboardPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.stream.Collectors;
+
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
+import javax.swing.plaf.ColorUIResource;
 
 public class SquareGameMain extends JFrame {
 
@@ -21,19 +30,18 @@ public class SquareGameMain extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         this.setLayout(new CardLayout());
-
-        JTabbedPane tabbedPane = new JTabbedPane();
+        this.setBackground(Color.black);
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         final GameBoardController gameBoardController = new GameBoardController(this);
         this.activeGamePanel = new ActiveGamePanel(gameBoardController);
         this.leaderboardPanel = new LeaderboardPanel(gameBoardController);
-        updateLeaderboards(gameBoardController.getGameState());
 
         tabbedPane.addTab("Active Game", this.activeGamePanel);
         tabbedPane.addTab("Leaderboards", this.leaderboardPanel);
 
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-        this.setMinimumSize(new Dimension(830, 660));
+        this.setMinimumSize(new Dimension(1300, 700));
     }
 
     public static void main(String arg[]) {
@@ -48,23 +56,18 @@ public class SquareGameMain extends JFrame {
     }
 
     public void updateLeaderboards(GameState gameState) {
-        this.activeGamePanel.getLeaderboardPanel().setText(gameState.getAiOptions().stream()
-                .filter(Objects::nonNull)
-                .sorted((a1, a2) -> Double.compare(gameState.getLeaderboard().getWinRate(a2.getId()), gameState.getLeaderboard().getWinRate(a1.getId())))
-                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
-                        gameState.getLeaderboard().getWins(aiOption.getId()) + "/" + gameState.getLeaderboard().getGamesPlayed(aiOption.getId()) +
-                        "(" + gameState.getLeaderboard().getWinRate(aiOption.getId()) + "%)")
-                .collect(Collectors.joining("\n")));
         this.leaderboardPanel.update(gameState);
     }
 
     public void updateGameScore(GameState gameState) {
-        this.activeGamePanel.getGameStatePanel().setSelectionColor(Color.black);
-        this.activeGamePanel.getGameStatePanel().setText("Round: " + gameState.getRoundNumber() + "\n");
-        gameState.getPlayerList().stream().filter(Player::isPlaying)
-                .sorted(Comparator.comparingInt(p1 -> gameState.getScoreBoard().get(p1).getScore()).reversed()).forEach(p -> {
-                    this.activeGamePanel.getGameStatePanel().setCaretColor(p.getColor());
-                    this.activeGamePanel.getGameStatePanel().append(p.getName() + ": " + gameState.getScoreBoard().get(p).getScore() + "\n");
+        this.activeGamePanel.getAiSelectorPanel().getRoundLabel().setText("ROUND: " + gameState.getRoundNumber());
+        gameState.getPlayerList().forEach(p -> {
+                final Score score = gameState.getScoreBoard().get(p);
+                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setScore(score.getScore());
+                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setCollisions(score.getCollisions());
+                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setEliminated(score.getEliminated());
+                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setGenerated(score.getGenerated());
+                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setKills(score.getKilled());
         });
     }
 }

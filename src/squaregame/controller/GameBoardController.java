@@ -98,8 +98,11 @@ public class GameBoardController {
 
     public void setStartingPositions() {
         final Random random = new Random();
-        this.gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> this.gameBoard.set(random.nextInt(this.gameBoard.getBoardSize()),
-                random.nextInt(this.gameBoard.getBoardSize()), new MagicSquare(p, p.getStartingLogic())));
+        this.gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
+            this.gameBoard.set(random.nextInt(this.gameBoard.getBoardSize()),
+                    random.nextInt(this.gameBoard.getBoardSize()), new MagicSquare(p, p.getStartingLogic()));
+            this.gameState.getScoreBoard().get(p).addGenerated();
+        });
     }
 
     public void runAllTurns() {

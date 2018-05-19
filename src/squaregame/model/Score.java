@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class Score {
     private int score = 0;
-    private int generated = 1;
+    private int generated = 0;
     private int killed = 0;
     private int collisions = 0;
     private int eliminated = 0;
@@ -24,10 +24,6 @@ public class Score {
     }
     public void addEliminated() {
         eliminated++;
-    }
-
-    public int getScore() {
-        return this.score;
     }
 
     public void resetScore() {

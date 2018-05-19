@@ -25,8 +25,8 @@ public class GameBoardView extends JComponent {
     @Override
     public void paintComponent(Graphics g) {
         final Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.BLACK);
-        g2.fillRect(-1, -1, MAX_BOARD_SIZE + 1, MAX_BOARD_SIZE + 1);
+        g2.setColor(Color.WHITE);
+        g2.drawRect(-1, -1, MAX_BOARD_SIZE + 1, MAX_BOARD_SIZE + 1);
         draw(g2);
         this.setMinimumSize(new Dimension(MAX_BOARD_SIZE + 1, MAX_BOARD_SIZE + 1));
     }
@@ -37,7 +37,7 @@ public class GameBoardView extends JComponent {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {
                 if (this.gameBoardController.getGameBoard().get(i, j) != null) {
                     g2.setColor(this.gameBoardController.getGameBoard().get(i, j).getPlayer().getColor());
-                    g2.fill3DRect(i * squareSize, j * squareSize, squareSize, squareSize, true);
+                    g2.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 }
             }
         }

@@ -1,48 +1,77 @@
 package squaregame.view;
 
+import lombok.Getter;
 import squaregame.controller.GameBoardController;
+import squaregame.model.Player;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+@Getter
 public class AISelectorPanel extends JPanel implements ActionListener {
 
     private GameBoardController gameBoardController;
     private List<AISelectorComboBox> comboBoxes;
+    private Map<Player, PlayerView> playerViewMap;
+    private JLabel roundLabel;
 
     public AISelectorPanel(GameBoardController gameBoardController) {
+        this.playerViewMap = new HashMap<>();
         this.gameBoardController = gameBoardController;
         this.comboBoxes = new ArrayList<>();
         this.setLayout(new GridBagLayout());
-        AtomicInteger y = new AtomicInteger();
+        final AtomicInteger row = new AtomicInteger();
+        final GridBagConstraints roundc = new GridBagConstraints();
+        roundc.gridy = row.getAndIncrement();
+        roundc.gridx = 0;
+        roundc.weightx = 3;
+        this.roundLabel = new JLabel("ROUND: 0");
+        this.roundLabel.setForeground(Color.WHITE);
+        add(roundLabel, roundc);
+        this.setBackground(Color.BLACK);
         this.gameBoardController.getGameState().getPlayerList().forEach(p -> {
+
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.BOTH;
+            c.gridx = 0;
+            c.gridy = row.getAndIncrement();
             final AISelectorComboBox aiSelectorComboBox = new AISelectorComboBox(gameBoardController);
+            aiSelectorComboBox.setEditable(true);
+            aiSelectorComboBox.getEditor().getEditorComponent().setBackground(p.getColor());
+
             comboBoxes.add(aiSelectorComboBox);
-            final GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = y.getAndIncrement();
             add(aiSelectorComboBox, c);
-            final GridBagConstraints c2 = new GridBagConstraints();
-            c2.gridx = 2;
-            c2.gridy = c.gridy;
-            final JLabel playerColorLabel = new JLabel("-----");
-            playerColorLabel.setForeground(p.getColor());
-            add(playerColorLabel, c2);
-            final GridBagConstraints c3 = new GridBagConstraints();
-            c3.gridx = 0;
-            c3.gridy = c.gridy;
-            final JLabel playerColorLabel1 = new JLabel("-----");
-            playerColorLabel1.setForeground(p.getColor());
-            add(playerColorLabel1, c3);
+
+            c.gridx = 1;
+            final JPanel cont = new JPanel();
+            final JLabel score = new JLabel("Score=");
+            score.setHorizontalAlignment(SwingConstants.LEFT);
+            cont.setBackground(p.getColor());
+            cont.add(score);
+            score.setPreferredSize(new Dimension(100, 20));
+            add(cont, c);
+
+            c.gridx = 2;
+            final PlayerView playerView = new PlayerView(score, p);
             aiSelectorComboBox.addActionListener(p);
+            add(playerView, c);
+            playerViewMap.put(p, playerView);
         });
     }
 
@@ -69,10 +98,6 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                 comboBox.setSelectedIndex(aiOptions.get(i));
             }
         }
-    }
-
-    public void disableAll() {
-
     }
 
     public List<AISelectorComboBox> getComboBoxes() {
