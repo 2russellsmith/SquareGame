@@ -110,33 +110,33 @@ public class GameBoardController {
         final List<KillEvent> squareKills = new ArrayList<>();
         final List<Location> squareCollisions = new ArrayList<>();
         this.gameState.getPlayerList().forEach(p -> this.gameState.getScoreBoard().get(p).resetScore());
-        for (int i = 0; i < this.gameBoard.getBoardSize(); i++) {
-            for (int j = 0; j < this.gameBoard.getBoardSize(); j++) {
-                if (this.gameBoard.get(i, j) != null) {
-                    this.gameState.getScoreBoard().get(this.gameBoard.get(i, j).getPlayer()).addPoint();
-                    if (this.gameBoard.get(i, j).getInactive() > 0) {
-                        checkForCollisions(i, j, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(),
-                                this.gameBoard.get(i, j).getSquareLogic(), this.gameBoard.get(i, j).getInactive() - 1));
+        for (int x = 0; x < this.gameBoard.getBoardSize(); x++) {
+            for (int y = 0; y < this.gameBoard.getBoardSize(); y++) {
+                if (this.gameBoard.get(x, y) != null) {
+                    this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addPoint();
+                    if (this.gameBoard.get(x, y).getInactive() > 0) {
+                        checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(),
+                                this.gameBoard.get(x, y).getSquareLogic(), this.gameBoard.get(x, y).getInactive() - 1));
                     } else {
-                        final SquareAction squareAction = this.gameBoard.get(i, j).getSquareLogic()
-                                .run(new SquareView(this.gameBoard.getView(i, j),
-                                        this.gameBoard.getPlayer(i, j, Direction.CENTER), i, j,
+                        final SquareAction squareAction = this.gameBoard.get(x, y).getSquareLogic()
+                                .run(new SquareView(this.gameBoard.getView(x, y),
+                                        this.gameBoard.getPlayer(x, y, Direction.CENTER), x, y,
                                         new PlayerAllowedMetadata(this.gameBoard.getBoardSize(), this.gameState.getRoundNumber())));
                         switch (squareAction.getAction()) {
                             case ATTACK:
-                                checkForCollisions(i, j, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic()));
-                                squareKills.add(new KillEvent(this.gameBoard.get(i, j).getPlayer(), new Location(i, j, squareAction.getDirection(), this.gameBoard.getBoardSize())));
+                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
+                                squareKills.add(new KillEvent(this.gameBoard.get(x, y).getPlayer(), new Location(x, y, squareAction.getDirection(), this.gameBoard.getBoardSize())));
                                 break;
                             case MOVE:
-                                checkForCollisions(i, j, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic()));
+                                checkForCollisions(x, y, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
                                 break;
                             case REPLICATE:
-                                this.gameState.getScoreBoard().get(this.gameBoard.get(i, j).getPlayer()).addGenerated();
-                                checkForCollisions(i, j, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getReplicated(), INACTIVE_COUNT));
-                                checkForCollisions(i, j, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic(), INACTIVE_COUNT));
+                                this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addGenerated();
+                                checkForCollisions(x, y, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getReplicated(), INACTIVE_COUNT));
+                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic(), INACTIVE_COUNT));
                                 break;
                             case WAIT:
-                                checkForCollisions(i, j, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(i, j).getPlayer(), squareAction.getSquareLogic()));
+                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
                         }
                     }
                 }
@@ -159,12 +159,13 @@ public class GameBoardController {
         });
     }
 
-    public void checkForCollisions(int i, int j, Direction direction, List<Location> collisions, GameBoard updatedGameBoard, MagicSquare magicSquare) {
+    public void checkForCollisions(int x, int y, Direction direction, List<Location> collisions, GameBoard updatedGameBoard, MagicSquare magicSquare) {
 
-        if (updatedGameBoard.get(i, j, direction) == null) {
-            updatedGameBoard.set(i, j, direction, magicSquare);
+        if (updatedGameBoard.get(x, y, direction) == null) {
+            updatedGameBoard.set(x, y, direction, magicSquare);
         } else {
-            collisions.add(new Location(i, j, direction, this.gameBoard.getBoardSize()));
+            this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addCollisions();
+            collisions.add(new Location(x, y, direction, this.gameBoard.getBoardSize()));
         }
     }
 
