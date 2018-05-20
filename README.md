@@ -6,5 +6,5 @@ This is a java recreation of that game.
 ## Getting setup
 * Clone this repo.
 * If you are using intelliJ, File-> Open-> pom.xml
-* Implement SquareLogic.class. Make sure your starting square is named DefaultSquare.
+* Implement [SquareLogic.class](src/squaregame/squares/SquareLogic) Make sure your starting square is named DefaultSquare.
 * Submit your squares to the person hosting the game.
