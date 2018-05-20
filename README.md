@@ -1,5 +1,5 @@
 # SquareGame
-All credit for this game idea goes to http://endigit.com/squarebattle/ 
+All credit for this game idea goes to [Endigit](http://endigit.com/squarebattle/) Their code and instruction can be found https://bitbucket.org/endigit/squarebattle for the LabView version of this game.
 
 This is a java recreation of that game. 
 
