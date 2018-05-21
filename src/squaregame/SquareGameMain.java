@@ -41,7 +41,7 @@ public class SquareGameMain extends JFrame {
         tabbedPane.addTab("Leaderboards", this.leaderboardPanel);
 
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-        this.setMinimumSize(new Dimension(1300, 700));
+        this.setMinimumSize(new Dimension(1370, 700));
     }
 
     public static void main(String arg[]) {
@@ -62,12 +62,13 @@ public class SquareGameMain extends JFrame {
     public void updateGameScore(GameState gameState) {
         this.activeGamePanel.getAiSelectorPanel().getRoundLabel().setText("ROUND: " + gameState.getRoundNumber());
         gameState.getPlayerList().forEach(p -> {
-                final Score score = gameState.getScoreBoard().get(p);
-                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setScore(score.getScore());
-                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setCollisions(score.getCollisions());
-                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setEliminated(score.getEliminated());
-                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setGenerated(score.getGenerated());
-                this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setKills(score.getKilled());
+            final Score score = gameState.getScoreBoard().get(p);
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setScore(score.getScore());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setCollisions(score.getCollisions());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setEliminated(score.getEliminated());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setGenerated(score.getGenerated());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setKills(score.getKilled());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setTurnClock(score.getAvgTurnTime());
         });
     }
 }

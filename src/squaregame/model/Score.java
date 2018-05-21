@@ -9,6 +9,7 @@ public class Score {
     private int killed = 0;
     private int collisions = 0;
     private int eliminated = 0;
+    private long avgTurnTime = 0;
 
     public void addPoint() {
         score++;
@@ -24,6 +25,10 @@ public class Score {
     }
     public void addEliminated() {
         eliminated++;
+    }
+
+    public void setAvgTurnTime(long avgTurnTime) {
+        this.avgTurnTime = avgTurnTime;
     }
 
     public void resetScore() {

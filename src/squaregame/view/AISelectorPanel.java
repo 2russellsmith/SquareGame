@@ -66,18 +66,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
             add(aiSelectorComboBox, c);
 
             c.gridx = 1;
-            final JPanel cont = new JPanel();
-            final JLabel score = new JLabel("Score=");
-            cont.setBorder(BorderFactory.createMatteBorder(borderSize, 0, borderSize, borderSize, p.getColor().darker()));
-            score.setHorizontalAlignment(SwingConstants.LEFT);
-            score.setForeground(p.getTextColor());
-            cont.setBackground(p.getColor());
-            cont.add(score);
-            score.setPreferredSize(new Dimension(100, 20));
-            add(cont, c);
-
-            c.gridx = 2;
-            final PlayerView playerView = new PlayerView(score, p);
+            final PlayerView playerView = new PlayerView(p);
             playerView.setBorder(BorderFactory.createMatteBorder(borderSize, 0, borderSize, borderSize * 2, p.getColor().darker()));
             aiSelectorComboBox.addActionListener(p);
             add(playerView, c);

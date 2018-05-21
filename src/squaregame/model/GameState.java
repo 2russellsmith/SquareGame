@@ -28,6 +28,7 @@ public class GameState {
     private Leaderboard leaderboard;
 
     private Map<Player, Score> scoreBoard;
+
     public GameState() {
         roundNumber = 0;
         final Reflections reflections = new Reflections("squaregame.squares");

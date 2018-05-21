@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameBoardController {
 
@@ -98,10 +99,10 @@ public class GameBoardController {
     }
 
     public void setStartingPositions() {
-        final Random random = new Random();
         this.gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
-            this.gameBoard.set(random.nextInt(this.gameBoard.getBoardSize()),
-                    random.nextInt(this.gameBoard.getBoardSize()), new MagicSquare(p, p.getStartingLogic()));
+            final int x = ThreadLocalRandom.current().nextInt(this.gameBoard.getBoardSize());
+            final int y = ThreadLocalRandom.current().nextInt(this.gameBoard.getBoardSize());
+            this.gameBoard.set(x, y, new MagicSquare(p, p.getStartingLogic(), new Location(x, y, Direction.CENTER, this.gameBoard.getBoardSize())));
             this.gameState.getScoreBoard().get(p).addGenerated();
         });
     }
@@ -110,39 +111,34 @@ public class GameBoardController {
         final GameBoard updatedGameBoard = new GameBoard(this.gameBoard.getBoardSize());
         final List<KillEvent> squareKills = new ArrayList<>();
         final List<Location> squareCollisions = new ArrayList<>();
+        final Map<Player, List<MagicSquare>> playerSquareMap = new HashMap<>();
+        final Map<Player, Score> scoreBoard = new HashMap<>(this.gameState.getScoreBoard());
         this.gameState.getPlayerList().forEach(p -> this.gameState.getScoreBoard().get(p).resetScore());
         for (int x = 0; x < this.gameBoard.getBoardSize(); x++) {
             for (int y = 0; y < this.gameBoard.getBoardSize(); y++) {
-                if (this.gameBoard.get(x, y) != null) {
-                    this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addPoint();
-                    if (this.gameBoard.get(x, y).getInactive() > 0) {
-                        checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(),
-                                this.gameBoard.get(x, y).getSquareLogic(), this.gameBoard.get(x, y).getInactive() - 1));
+                final MagicSquare squareTakingTurn = this.gameBoard.get(x, y);
+                if (squareTakingTurn != null) {
+                    this.gameState.getScoreBoard().get(squareTakingTurn.getPlayer()).addPoint();
+                    if (squareTakingTurn.getInactive() > 0) {
+                        final Location location = new Location(x, y, Direction.CENTER, this.gameBoard.getBoardSize());
+                        checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(),
+                                squareTakingTurn.getSquareLogic(), location, squareTakingTurn.getInactive() - 1));
                     } else {
-                        final SquareAction squareAction = this.gameBoard.get(x, y).getSquareLogic()
-                                .run(new SquareView(this.gameBoard.getView(x, y),
-                                        this.gameBoard.getPlayer(x, y, Direction.CENTER), x, y,
-                                        new PlayerAllowedMetadata(this.gameBoard.getBoardSize(), this.gameState.getRoundNumber())));
-                        switch (squareAction.getAction()) {
-                            case ATTACK:
-                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
-                                squareKills.add(new KillEvent(this.gameBoard.get(x, y).getPlayer(), new Location(x, y, squareAction.getDirection(), this.gameBoard.getBoardSize())));
-                                break;
-                            case MOVE:
-                                checkForCollisions(x, y, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
-                                break;
-                            case REPLICATE:
-                                this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addGenerated();
-                                checkForCollisions(x, y, squareAction.getDirection(), squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getReplicated(), INACTIVE_COUNT));
-                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic(), INACTIVE_COUNT));
-                                break;
-                            case WAIT:
-                                checkForCollisions(x, y, Direction.CENTER, squareCollisions, updatedGameBoard, new MagicSquare(this.gameBoard.get(x, y).getPlayer(), squareAction.getSquareLogic()));
-                        }
+                        playerSquareMap.putIfAbsent(squareTakingTurn.getPlayer(), new ArrayList<>());
+                        playerSquareMap.get(squareTakingTurn.getPlayer()).add(squareTakingTurn);
                     }
                 }
             }
         }
+        playerSquareMap.forEach((key, value) -> {
+
+            final long startTime = System.nanoTime();
+            executeSquareActions(value, updatedGameBoard, squareCollisions, squareKills, scoreBoard);
+            final long endTime = System.nanoTime();
+
+            final long output = (endTime - startTime) / value.size();
+            this.gameState.getScoreBoard().get(key).setAvgTurnTime(output);
+        });
         this.gameState.rankNewDeadPlayers();
         this.gameBoard = updatedGameBoard;
         squareCollisions.forEach(location -> {
@@ -160,13 +156,43 @@ public class GameBoardController {
         });
     }
 
-    public void checkForCollisions(int x, int y, Direction direction, List<Location> collisions, GameBoard updatedGameBoard, MagicSquare magicSquare) {
+    public void executeSquareActions(List<MagicSquare> magicSquares, GameBoard updatedGameBoard, List<Location> squareCollisions, List<KillEvent> squareKills, Map<Player, Score> scoreboard) {
+        magicSquares.forEach(squareTakingTurn -> {
+            final SquareAction squareAction = squareTakingTurn.getSquareLogic()
+                    .run(new SquareView(this.gameBoard.getView(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY()),
+                            squareTakingTurn.getPlayer(), squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(),
+                            new PlayerAllowedMetadata(this.gameBoard.getBoardSize(), this.gameState.getRoundNumber(), new HashMap<>(scoreboard))));
+            switch (squareAction.getAction()) {
+                case ATTACK:
+                    final Location attackLocation = squareTakingTurn.getLocation();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), attackLocation));
+                    squareKills.add(new KillEvent(squareTakingTurn.getPlayer(), new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize())));
+                    break;
+                case MOVE:
+                    final Location moveLocation = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), moveLocation));
+                    break;
+                case REPLICATE:
+                    final Location replicateLocation1 = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
+                    final Location replicateLocation2 = squareTakingTurn.getLocation();
+                    this.gameState.getScoreBoard().get(squareTakingTurn.getPlayer()).addGenerated();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getReplicated(), replicateLocation1, INACTIVE_COUNT));
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), replicateLocation2, INACTIVE_COUNT));
+                    break;
+                case WAIT:
+                    final Location waitLocation = squareTakingTurn.getLocation();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), waitLocation));
+            }
+        });
+    }
 
-        if (updatedGameBoard.get(x, y, direction) == null) {
-            updatedGameBoard.set(x, y, direction, magicSquare);
+    public void checkForCollisions(List<Location> collisions, GameBoard updatedGameBoard, MagicSquare magicSquare) {
+
+        if (updatedGameBoard.get(magicSquare.getLocation().getX(), magicSquare.getLocation().getY()) == null) {
+            updatedGameBoard.set(magicSquare.getLocation().getX(), magicSquare.getLocation().getY(), magicSquare);
         } else {
-            this.gameState.getScoreBoard().get(this.gameBoard.get(x, y).getPlayer()).addCollisions();
-            collisions.add(new Location(x, y, direction, this.gameBoard.getBoardSize()));
+            this.gameState.getScoreBoard().get(magicSquare.getPlayer()).addCollisions();
+            collisions.add(magicSquare.getLocation());
         }
     }
 
