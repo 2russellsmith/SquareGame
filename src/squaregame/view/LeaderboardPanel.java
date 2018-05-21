@@ -48,13 +48,12 @@ public class LeaderboardPanel extends JPanel {
                         gameState.getLeaderboard().getScore(aiOption.getId()))
                 .collect(Collectors.joining("\n"));
         this.oneVsOneLeaderboard.setText("One Vs One Standings \n\n\n" + status);
-//        final String freeForAll = gameState.getAiOptions().stream()
-//                .filter(Objects::nonNull)
-//                .sorted((a1, a2) -> Double.compare(gameState.getFreeForAllLeaderboard().getWinRate(a2.getId()), gameState.getFreeForAllLeaderboard().getWinRate(a1.getId())))
-//                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
-//                        gameState.getFreeForAllLeaderboard().getWins(aiOption.getId()) + "/" + gameState.getFreeForAllLeaderboard().getGamesPlayed(aiOption.getId()) +
-//                        "(" + gameState.getFreeForAllLeaderboard().getWinRate(aiOption.getId()) + "%)")
-//                .collect(Collectors.joining("\n"));
-//        this.freeForAllLeaderboard.setText("Free For All Standings \n\n\n" + freeForAll);
+        final String freeForAll = gameState.getAiOptions().stream()
+                .filter(Objects::nonNull)
+                .sorted((a1, a2) -> Double.compare(gameState.getFreeForAllLeaderboard().getScore(a2.getId()), gameState.getFreeForAllLeaderboard().getScore(a1.getId())))
+                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                        gameState.getFreeForAllLeaderboard().getScore(aiOption.getId()))
+                .collect(Collectors.joining("\n"));
+        this.freeForAllLeaderboard.setText("Free For All Standings \n\n\n" + freeForAll);
     }
 }
