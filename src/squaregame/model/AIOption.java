@@ -15,8 +15,8 @@ public class AIOption {
         return squareLogic;
     }
 
-    public int getId() {
-        return id;
+    public String getId() {
+        return squareLogic.getSquareName();
     }
 
     @Override

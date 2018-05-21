@@ -12,15 +12,20 @@ import squaregame.model.PlayerAllowedMetadata;
 import squaregame.model.Score;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
-import squaregame.squares.SquareLogic;
 
-import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.swing.JButton;
+import javax.swing.Timer;
 
 public class GameBoardController {
 
@@ -58,6 +63,7 @@ public class GameBoardController {
     private void gameOver() {
         this.timer.stop();
         if (isLeaderBoardMode) {
+
             this.gameState.finalRank();
             this.squareGameMain.updateLeaderboards(this.gameState);
             this.runLeaderboardRoundButton.doClick();

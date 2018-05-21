@@ -3,7 +3,12 @@ package squaregame.model;
 import org.reflections.Reflections;
 import squaregame.squares.SquareLogic;
 
-import java.awt.*;
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -46,8 +51,8 @@ public class GameState {
             }
         });
         this.whoPlayersBeat = new HashMap<>();
-        this.leaderboard = new Leaderboard(aiOptions.size());
-        this.freeForAllLeaderboard = new Leaderboard(aiOptions.size());
+        this.leaderboard = new Leaderboard(aiOptions);
+        this.freeForAllLeaderboard = new Leaderboard(aiOptions);
         this.scoreBoard = new HashMap<>();
         playerList = new ArrayList<>();
         playerList.add(new Player(new Color(255, 0, 0), Color.WHITE, aiOptions.get(0)));
@@ -78,9 +83,12 @@ public class GameState {
                 .sorted(comp)
                 .forEach(loser -> this.whoPlayersBeat.putIfAbsent(loser, new HashSet<>(this.whoPlayersBeat.keySet())));
         if (this.isFreeForAll()) {
-            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.freeForAllLeaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
+//            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.freeForAllLeaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
         } else {
-            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> this.leaderboard.addScore(key.getAiOption().getId(), loser.getAiOption().getId())));
+            this.whoPlayersBeat.forEach((key, value) -> value.forEach(loser -> {
+                this.leaderboard.addScore(key.getAiOption().getId(), 10);
+                this.leaderboard.addScore(loser.getAiOption().getId(), -10);
+            }));
         }
     }
 
