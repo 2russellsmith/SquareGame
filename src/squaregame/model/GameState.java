@@ -97,6 +97,7 @@ public class GameState {
                 final int winnerMmr = this.leaderboard.getScore(winner.getAiOption().getId());
                 final int loserMmr = this.leaderboard.getScore(loser.getAiOption().getId());
                 final double gameMmrValue = (1 - ((double)winnerMmr / (winnerMmr + loserMmr))) * K;
+                System.out.println("GameMMR Value" + gameMmrValue);
                 this.leaderboard.addScore(winner.getAiOption().getId(), (int)gameMmrValue);
                 this.leaderboard.addScore(loser.getAiOption().getId(), -(int)gameMmrValue);
             }));
