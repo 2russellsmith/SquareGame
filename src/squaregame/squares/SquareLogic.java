@@ -5,6 +5,9 @@ import squaregame.model.Direction;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 
+import java.awt.*;
+import java.util.Random;
+
 /**
  * Created by Russell on 5/5/18.
  */
@@ -22,6 +25,17 @@ public abstract class SquareLogic {
      * @return Name of your square.
      */
     public abstract String getSquareName();
+    /**
+     * Give your square a Unique Color!
+     * @return Color of your square.
+     */
+    public Color getColor() {
+        Random rand = new Random();
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        return new Color(r, g, b);
+    };
 
     public SquareAction move(Direction direction) {
         return SquareAction.move(direction, this);

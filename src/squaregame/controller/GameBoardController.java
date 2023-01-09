@@ -82,12 +82,12 @@ public class GameBoardController {
             }
             setStartingPositions();
             if (isLeaderBoardMode) {
-                this.timer = new Timer(10, e -> {
+                this.timer = new Timer(0, e -> {
                     runRound();
                     squareGameMain.repaint();
                 });
             } else {
-                this.timer = new Timer(1, e -> {
+                this.timer = new Timer(0, e -> {
                     runRound();
                     squareGameMain.repaint();
                 });

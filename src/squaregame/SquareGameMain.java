@@ -69,6 +69,7 @@ public class SquareGameMain extends JFrame {
             this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setGenerated(score.getGenerated());
             this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setKills(score.getKilled());
             this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setTurnClock(score.getAvgTurnTime());
+            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setColor();
         });
     }
 }

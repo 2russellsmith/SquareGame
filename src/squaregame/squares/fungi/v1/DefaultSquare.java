@@ -5,6 +5,8 @@ import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
 import squaregame.squares.SquareLogic;
 
+import java.awt.*;
+
 /**
  * growth:
  * Propogate "generation" or "turn" (they are the same if it's all one type of square)
@@ -31,5 +33,10 @@ public class DefaultSquare extends SquareLogic {
     @Override
     public String getSquareName() {
         return "Fungi";
+    }
+
+    @Override
+    public Color getColor() {
+        return Color.green;
     }
 }

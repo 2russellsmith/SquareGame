@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 /**
  * Created by Russell on 5/5/18.
@@ -19,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GameState {
     private int roundNumber;
     private int totalRounds = 3000;
+
+    private static int MAX_PLAYERS = 8;
 
     private List<Player> playerList;
     private Map<Player, Set<Player>> whoPlayersBeat;
@@ -46,14 +49,7 @@ public class GameState {
         this.freeForAllLeaderboard = new Leaderboard(aiOptions, "FREEFORALL");
         this.scoreBoard = new HashMap<>();
         playerList = new ArrayList<>();
-        playerList.add(new Player(new Color(255, 0, 0), Color.WHITE, aiOptions.get(0)));
-        playerList.add(new Player(new Color(255, 255 / 2, 0), Color.BLACK, aiOptions.get(0)));
-        playerList.add(new Player(new Color(0, 0, 255), Color.WHITE, aiOptions.get(0)));
-        playerList.add(new Player(new Color(255, 255, 0), Color.BLACK, aiOptions.get(0)));
-        playerList.add(new Player(new Color(128, 0, 128), Color.WHITE, aiOptions.get(0)));
-        playerList.add(new Player(new Color(0, 255, 0), Color.BLACK, aiOptions.get(0)));
-        playerList.add(new Player(new Color(100, 100, 100), Color.WHITE, aiOptions.get(0)));
-        playerList.add(new Player(new Color(255, 255, 255), Color.BLACK, aiOptions.get(0)));
+        IntStream.rangeClosed(1, MAX_PLAYERS).forEach((i) -> playerList.add(new Player(Color.WHITE, aiOptions.get(0))));
 
     }
 

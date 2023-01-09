@@ -10,7 +10,7 @@ import javax.swing.JComboBox;
 
 public class AISelectorComboBox extends JComboBox<AIOption> {
 
-    private GameBoardController gameBoardController;
+    private final GameBoardController gameBoardController;
 
     public AISelectorComboBox(GameBoardController gameBoardController) {
         super(gameBoardController.getGameState().getAiOptions().toArray(new AIOption[0]));

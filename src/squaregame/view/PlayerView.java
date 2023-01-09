@@ -7,11 +7,14 @@ import javax.swing.JPanel;
 
 public class PlayerView extends JPanel {
     private ScoreView scoreView;
+    private Player p;
+
 
     public PlayerView(Player p) {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBackground(p.getColor());
-        this.scoreView = new ScoreView(p);
+        this.p = p;
+        this.scoreView = new ScoreView();
         add(scoreView);
     }
 
@@ -37,5 +40,11 @@ public class PlayerView extends JPanel {
 
     public void setTurnClock(long avgTurnTime) {
         this.scoreView.getTurnClock().setText("TurnClock=" + avgTurnTime);
+    }
+
+    public void setColor(){
+        this.setBackground(this.p.getColor());
+        this.scoreView.setBackground(this.p.getColor());
+        this.scoreView.setColor(this.p);
     }
 }

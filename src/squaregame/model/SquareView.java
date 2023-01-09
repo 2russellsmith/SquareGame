@@ -29,6 +29,12 @@ public class SquareView {
         return result;
     }
 
+    public List<Direction> getOccupiedDirections() {
+        List<Direction> enemy = getEnemyDirections();
+        enemy.addAll(getFriendlyDirections());
+        return enemy;
+    }
+
     public List<Direction> getEnemyDirections() {
         final List<Direction> result = new ArrayList<>();
         for (int i = 0; i < this.view.size(); i++) {

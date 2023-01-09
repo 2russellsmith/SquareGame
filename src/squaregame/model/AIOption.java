@@ -5,9 +5,9 @@ import squaregame.squares.SquareLogic;
 import java.lang.reflect.InvocationTargetException;
 
 public class AIOption {
-    private Class<SquareLogic> squareLogic;
-    private SquareLogic defaultSquareLogic;
-    private int id;
+    private final Class<SquareLogic> squareLogic;
+    private final SquareLogic defaultSquareLogic;
+    private final int id;
 
     public AIOption(Class<SquareLogic> squareLogic, int id) {
         this.squareLogic = squareLogic;
@@ -25,6 +25,9 @@ public class AIOption {
 
     public String getId() {
         return defaultSquareLogic.getSquareName();
+    }
+    public SquareLogic getDefaultSquare() {
+        return defaultSquareLogic;
     }
 
     @Override
