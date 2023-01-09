@@ -7,6 +7,7 @@ import squaregame.view.AISelectorComboBox;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by Russell on 5/5/18.
@@ -36,11 +37,15 @@ public class Player implements ActionListener {
     }
 
     public String getName() {
-        return aiOption.getSquareLogic().getSquareName();
+        return aiOption.getId();
     }
 
     public SquareLogic getStartingLogic() {
-        return aiOption.getSquareLogic();
+        try {
+            return aiOption.getStartingSquareLogic();
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public AIOption getAiOption() {

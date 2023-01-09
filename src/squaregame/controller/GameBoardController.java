@@ -87,7 +87,7 @@ public class GameBoardController {
                     squareGameMain.repaint();
                 });
             } else {
-                this.timer = new Timer(10, e -> {
+                this.timer = new Timer(1, e -> {
                     runRound();
                     squareGameMain.repaint();
                 });

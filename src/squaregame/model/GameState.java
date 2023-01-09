@@ -4,11 +4,6 @@ import org.reflections.Reflections;
 import squaregame.squares.SquareLogic;
 
 import java.awt.Color;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -43,11 +38,7 @@ public class GameState {
         final AtomicInteger aiId = new AtomicInteger(0);
         classes.forEach(c -> {
             if (c.getSimpleName().equals("DefaultSquare")) {
-                try {
-                    aiOptions.add(new AIOption(c.newInstance(), aiId.getAndIncrement()));
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                aiOptions.add(new AIOption((Class<SquareLogic>) c, aiId.getAndIncrement()));
             }
         });
         this.whoPlayersBeat = new HashMap<>();

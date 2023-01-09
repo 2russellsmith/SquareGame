@@ -44,14 +44,14 @@ public class LeaderboardPanel extends JPanel {
         final String status = gameState.getAiOptions().stream()
                 .filter(Objects::nonNull)
                 .sorted((a1, a2) -> Double.compare(gameState.getLeaderboard().getScore(a2.getId()), gameState.getLeaderboard().getScore(a1.getId())))
-                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                .map(aiOption -> aiOption.getId() + ": " +
                         gameState.getLeaderboard().getScore(aiOption.getId()))
                 .collect(Collectors.joining("\n"));
         this.oneVsOneLeaderboard.setText("One Vs One Standings \n\n\n" + status);
         final String freeForAll = gameState.getAiOptions().stream()
                 .filter(Objects::nonNull)
                 .sorted((a1, a2) -> Double.compare(gameState.getFreeForAllLeaderboard().getScore(a2.getId()), gameState.getFreeForAllLeaderboard().getScore(a1.getId())))
-                .map(aiOption -> aiOption.getSquareLogic().getSquareName() + ": " +
+                .map(aiOption -> aiOption.getId() + ": " +
                         gameState.getFreeForAllLeaderboard().getScore(aiOption.getId()))
                 .collect(Collectors.joining("\n"));
         this.freeForAllLeaderboard.setText("Free For All Standings \n\n\n" + freeForAll);
