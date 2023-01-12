@@ -124,7 +124,7 @@ public class GameBoardController {
             if (isLeaderBoardMode) {
                 this.timer = new Timer(10, e -> runRound());
             } else {
-                this.timer = new Timer(50, e -> {
+                this.timer = new Timer(10, e -> {
                     runRound();
                 });
             }
