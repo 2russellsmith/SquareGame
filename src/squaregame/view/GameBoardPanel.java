@@ -2,23 +2,19 @@ package squaregame.view;
 
 import squaregame.controller.GameBoardController;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
 /**
  * Created by Russell on 5/7/18.
  */
-public class GameBoardView extends JComponent {
+public class GameBoardPanel extends JPanel {
 
+    public static final Integer MAX_BOARD_SIZE = 800;
+    private final GameBoardController gameBoardController;
 
-    public static final Integer MAX_BOARD_SIZE = 600;
-    private GameBoardController gameBoardController;
-
-    public GameBoardView(GameBoardController gameBoardController) {
+    public GameBoardPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
     }
 

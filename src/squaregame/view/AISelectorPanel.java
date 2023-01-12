@@ -44,7 +44,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
         final GridBagConstraints roundc = new GridBagConstraints();
         roundc.gridy = row.getAndIncrement();
         roundc.gridx = 0;
-        roundc.weightx = 3;
+        roundc.weightx = 5;
         this.roundLabel = new JLabel("ROUND: 0");
         this.roundLabel.setForeground(Color.WHITE);
         add(roundLabel, roundc);
@@ -58,7 +58,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
             c.gridy = row.getAndIncrement();
             final AISelectorComboBox aiSelectorComboBox = new AISelectorComboBox(gameBoardController);
             aiSelectorComboBox.setEditable(true);
-            aiSelectorComboBox.setBorder(BorderFactory.createMatteBorder(borderSize, borderSize * 2, borderSize, 0, p.getColor().darker()));
+            aiSelectorComboBox.setBorder(BorderFactory.createMatteBorder(borderSize, borderSize * 2, borderSize * 2, 0, p.getColor().darker()));
             aiSelectorComboBox.getEditor().getEditorComponent().setBackground(p.getColor());
             aiSelectorComboBox.getEditor().getEditorComponent().setForeground(p.getTextColor());
 

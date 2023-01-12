@@ -1,47 +1,25 @@
 package squaregame;
 
 import squaregame.controller.GameBoardController;
-import squaregame.model.GameState;
-import squaregame.model.Player;
-import squaregame.model.Score;
-import squaregame.view.ActiveGamePanel;
-import squaregame.view.LeaderboardPanel;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Comparator;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-import javax.swing.plaf.ColorUIResource;
+import javax.swing.*;
 
-public class SquareGameMain extends JFrame {
-
-    private ActiveGamePanel activeGamePanel;
-    private LeaderboardPanel leaderboardPanel;
+public class SquareGameMain {
 
     public SquareGameMain() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-        this.setLayout(new CardLayout());
-        this.setBackground(Color.black);
-        final JTabbedPane tabbedPane = new JTabbedPane();
+        JFrame mainFrame = new JFrame();
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setVisible(true);
+        mainFrame.setLayout(new CardLayout());
+        mainFrame.getContentPane().setBackground(Color.BLACK);
+        JPanel mainPanel = new JPanel();
 
-        final GameBoardController gameBoardController = new GameBoardController(this);
-        this.activeGamePanel = new ActiveGamePanel(gameBoardController);
-        this.leaderboardPanel = new LeaderboardPanel(gameBoardController);
-
-        tabbedPane.addTab("Active Game", this.activeGamePanel);
-        tabbedPane.addTab("Leaderboards", this.leaderboardPanel);
-
-        this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-        this.setMinimumSize(new Dimension(1370, 700));
+        mainFrame.setLayout( new GridBagLayout() );
+        mainFrame.add(mainPanel);
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        new GameBoardController(mainPanel);
     }
 
     public static void main(String arg[]) {
@@ -53,23 +31,5 @@ public class SquareGameMain extends JFrame {
             // handle exception
         }
         SwingUtilities.invokeLater(SquareGameMain::new);
-    }
-
-    public void updateLeaderboards(GameState gameState) {
-        this.leaderboardPanel.update(gameState);
-    }
-
-    public void updateGameScore(GameState gameState) {
-        this.activeGamePanel.getAiSelectorPanel().getRoundLabel().setText("ROUND: " + gameState.getRoundNumber());
-        gameState.getPlayerList().forEach(p -> {
-            final Score score = gameState.getScoreBoard().get(p);
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setScore(score.getScore());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setCollisions(score.getCollisions());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setEliminated(score.getEliminated());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setGenerated(score.getGenerated());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setKills(score.getKilled());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setTurnClock(score.getAvgTurnTime());
-            this.activeGamePanel.getAiSelectorPanel().getPlayerViewMap().get(p).setColor();
-        });
     }
 }

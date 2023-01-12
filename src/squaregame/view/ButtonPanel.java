@@ -2,7 +2,7 @@ package squaregame.view;
 
 import squaregame.controller.GameBoardController;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,14 +10,13 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 public class ButtonPanel extends JPanel implements ActionListener {
-    public JButton startButton, stopButton, resetButton, leaderboardButton;
-    public AISelectorPanel aiSelectorPanel;
+    public JButton startButton, stopButton, resetButton, leaderboardButton, oneRoundButton;
     private GameBoardController gameBoardController;
 
-    public ButtonPanel(GameBoardController gameBoardController, AISelectorPanel aiSelectorPanel) {
-        this.aiSelectorPanel = aiSelectorPanel;
+    public ButtonPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
         this.setBackground(Color.black);
         startButton = new JButton("Start Game");
@@ -39,6 +38,16 @@ public class ButtonPanel extends JPanel implements ActionListener {
         stopButton.setEnabled(false);
         add(stopButton);
 
+        oneRoundButton = new JButton("One Round");
+        oneRoundButton.setVerticalTextPosition(AbstractButton.CENTER);
+        oneRoundButton.setHorizontalTextPosition(AbstractButton.CENTER);
+        oneRoundButton.setMnemonic(KeyEvent.VK_E);
+        oneRoundButton.setActionCommand("OneRound");
+        oneRoundButton.addActionListener(this);
+        oneRoundButton.setToolTipText("Moves the game one round");
+        oneRoundButton.setEnabled(true);
+        add(oneRoundButton);
+
         resetButton = new JButton("Reset Game");
         resetButton.setVerticalTextPosition(AbstractButton.CENTER);
         resetButton.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -57,8 +66,6 @@ public class ButtonPanel extends JPanel implements ActionListener {
         leaderboardButton.setToolTipText("Starts Leaderboard");
         this.gameBoardController.setRunLeaderboardRoundButton(leaderboardButton);
 
-        leaderboardButton.addActionListener(aiSelectorPanel);
-        aiSelectorPanel.getComboBoxes().forEach(comboBox -> leaderboardButton.addActionListener(comboBox));
         add(leaderboardButton);
     }
 
@@ -69,6 +76,10 @@ public class ButtonPanel extends JPanel implements ActionListener {
             stopButton.setEnabled(true);
         } else if ("StopGame".equals(e.getActionCommand())){
             this.gameBoardController.stopGame();
+            stopButton.setEnabled(false);
+            startButton.setEnabled(true);
+        } else if ("OneRound".equals(e.getActionCommand())){
+            this.gameBoardController.oneRound();
             stopButton.setEnabled(false);
             startButton.setEnabled(true);
         } else if ("ResetGame".equals(e.getActionCommand())){
