@@ -57,10 +57,14 @@ public class GameBoardController {
         this.buttonPanel = new ButtonPanel(this);
         this.leaderBoardPanel = new LeaderboardPanel(this);
         final GameBoardPanel gameBoardPanel = new GameBoardPanel(this);
-        gameBoardPanel.setPreferredSize(new Dimension(GameBoardPanel.MAX_BOARD_SIZE, GameBoardPanel.MAX_BOARD_SIZE));
+//        gameBoardPanel.setPreferredSize(new Dimension(GameBoardPanel.MAX_BOARD_SIZE, GameBoardPanel.MAX_BOARD_SIZE));
+        gameBoardPanel.setMinimumSize(mainPanel.getMaximumSize());
         this.gamePanel.setBackground(Color.BLACK);
-        this.gamePanel.add(gameBoardPanel, 1);
-        this.gamePanel.setPreferredSize(new Dimension(1000, 1000));
+        this.gamePanel.setLayout(new GridBagLayout());
+        this.gamePanel.add(gameBoardPanel, gbc);
+        this.gamePanel.setMinimumSize(mainPanel.getMaximumSize());
+//        this.gamePanel.add(gameBoardPanel, 1);
+        this.gamePanel.setMinimumSize(new Dimension(1000, 1000));
         this.gamePanel.setVisible(false);
         this.mainPanel.setLayout( new GridBagLayout() );
         this.mainPanel.add(this.aiSelectorPanel, gbc);
@@ -142,7 +146,8 @@ public class GameBoardController {
         this.gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
             scoreboardPanel.add(this.aiSelectorPanel.getPlayerViewMap().get(p));
         });
-        this.gamePanel.add(scoreboardPanel, 2);
+//        this.gamePanel.add(scoreboardPanel, new GridBagConstraints());
+//        this.gamePanel.add(scoreboardPanel, 2);
         this.gamePanel.repaint();
     }
 
