@@ -6,29 +6,32 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import static squaregame.view.PlayerView.newColorWithAlpha;
+
 /**
  * Created by Russell on 5/7/18.
  */
 public class GameBoardPanel extends JPanel {
 
-    public static final Integer MAX_BOARD_SIZE = 800;
+    public static Integer MAX_BOARD_SIZE = 900;
     private final GameBoardController gameBoardController;
 
     public GameBoardPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
+
+        setPreferredSize(new Dimension(GameBoardPanel.MAX_BOARD_SIZE, GameBoardPanel.MAX_BOARD_SIZE));
+        setBackground(newColorWithAlpha(Color.BLACK));
     }
 
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         final Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.WHITE);
-        g2.drawRect(-1, -1, MAX_BOARD_SIZE + 1, MAX_BOARD_SIZE + 1);
         draw(g2);
-        this.setMinimumSize(new Dimension(MAX_BOARD_SIZE + 1, MAX_BOARD_SIZE + 1));
     }
 
     public void draw(Graphics2D g2){
-        final int squareSize = MAX_BOARD_SIZE / this.gameBoardController.getGameBoard().getBoardSize();
+        final int squareSize = getSquareSize();
         for (int i = 0; i < this.gameBoardController.getGameBoard().getBoardSize(); i++) {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {
                 if (this.gameBoardController.getGameBoard().get(i, j) != null) {
@@ -37,5 +40,13 @@ public class GameBoardPanel extends JPanel {
                 }
             }
         }
+        this.setPreferredSize(new Dimension(squareSize * this.gameBoardController.getGameBoard().getBoardSize(),
+                squareSize * this.gameBoardController.getGameBoard().getBoardSize()));
+        this.setMinimumSize(new Dimension(squareSize * this.gameBoardController.getGameBoard().getBoardSize(),
+                squareSize * this.gameBoardController.getGameBoard().getBoardSize()));
+    }
+
+    public int getSquareSize() {
+        return MAX_BOARD_SIZE / this.gameBoardController.getGameBoard().getBoardSize();
     }
 }

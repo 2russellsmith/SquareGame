@@ -6,10 +6,10 @@ import squaregame.squares.SquareLogic;
  * Created by Russell on 5/5/18.
  */
 public class SquareAction {
-    private Action action;
-    private Direction direction;
-    private SquareLogic squareLogic;
-    private SquareLogic replicated;
+    private final Action action;
+    private final Direction direction;
+    private final SquareLogic squareLogic;
+    private final SquareLogic replicated;
 
     private SquareAction(Action action, Direction direction, SquareLogic squareLogic, SquareLogic replicated) {
         this.action = action;

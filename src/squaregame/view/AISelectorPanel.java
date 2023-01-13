@@ -27,13 +27,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
+import static squaregame.view.PlayerView.newColorWithAlpha;
+
 @Getter
 public class AISelectorPanel extends JPanel implements ActionListener {
 
     private GameBoardController gameBoardController;
     private List<AISelectorComboBox> comboBoxes;
     private Map<Player, PlayerView> playerViewMap;
-    private JLabel roundLabel;
 
     public AISelectorPanel(GameBoardController gameBoardController) {
         this.playerViewMap = new HashMap<>();
@@ -41,13 +42,13 @@ public class AISelectorPanel extends JPanel implements ActionListener {
         this.comboBoxes = new ArrayList<>();
         this.setLayout(new GridBagLayout());
         final AtomicInteger row = new AtomicInteger();
-        final GridBagConstraints roundc = new GridBagConstraints();
-        roundc.gridy = row.getAndIncrement();
-        roundc.gridx = 0;
-        roundc.weightx = 5;
-        this.roundLabel = new JLabel("ROUND: 0");
-        this.roundLabel.setForeground(Color.WHITE);
-        add(roundLabel, roundc);
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridy = row.getAndIncrement();
+        JLabel squareChoiceLabel = new JLabel("Select Your Fighting Squares:");
+        squareChoiceLabel.setOpaque(true);
+        squareChoiceLabel.setForeground(Color.WHITE);
+        squareChoiceLabel.setBackground(newColorWithAlpha(Color.BLACK));
+        add(squareChoiceLabel);
         this.setBackground(Color.BLACK);
         final int borderSize = 2;
         this.gameBoardController.getGameState().getPlayerList().forEach(p -> {
@@ -67,8 +68,8 @@ public class AISelectorPanel extends JPanel implements ActionListener {
 
             c.gridx = 1;
             final PlayerView playerView = new PlayerView(p);
-            playerView.setBorder(BorderFactory.createMatteBorder(borderSize, 0, borderSize, borderSize * 2, p.getColor().darker()));
             aiSelectorComboBox.addActionListener(p);
+            playerView.setVisible(false);
             add(playerView, c);
             playerViewMap.put(p, playerView);
         });
@@ -90,6 +91,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                 this.gameBoardController.getGameState().setIsFreeForAll(true);
                 numberOfPlayers = ThreadLocalRandom.current().nextInt(3, 9);
             }
+            comboBoxes.forEach(c -> c.setSelectedIndex(0));
             final List<Integer> comboBoxIndex = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
             Collections.shuffle(comboBoxIndex);
             for (int i = 0; i < numberOfPlayers && i < aiOptions.size(); i++) {

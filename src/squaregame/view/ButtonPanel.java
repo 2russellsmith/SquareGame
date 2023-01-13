@@ -13,12 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 public class ButtonPanel extends JPanel implements ActionListener {
-    public JButton startButton, stopButton, resetButton, leaderboardButton, oneRoundButton;
+    public JButton startButton, stopButton, resetButton, leaderboardButton, oneRoundButton, debugModeButton;
     private GameBoardController gameBoardController;
 
     public ButtonPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
-        this.setBackground(Color.black);
         startButton = new JButton("Start Game");
         startButton.setVerticalTextPosition(AbstractButton.CENTER);
         startButton.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -65,8 +64,18 @@ public class ButtonPanel extends JPanel implements ActionListener {
         leaderboardButton.addActionListener(this);
         leaderboardButton.setToolTipText("Starts Leaderboard");
         this.gameBoardController.setRunLeaderboardRoundButton(leaderboardButton);
-
+        setOpaque(false);
         add(leaderboardButton);
+
+        debugModeButton = new JButton("Debug");
+        debugModeButton.setVerticalTextPosition(AbstractButton.CENTER);
+        debugModeButton.setHorizontalTextPosition(AbstractButton.CENTER);
+        debugModeButton.setMnemonic(KeyEvent.VK_R);
+        debugModeButton.setActionCommand("DebugMode");
+        debugModeButton.addActionListener(this);
+        debugModeButton.setToolTipText("Starts Leaderboard");
+        setOpaque(true);
+        add(debugModeButton);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -91,6 +100,8 @@ public class ButtonPanel extends JPanel implements ActionListener {
             stopButton.setEnabled(true);
             this.gameBoardController.resetGame(true);
             this.gameBoardController.startGame();
+        } else if ("DebugMode".equals(e.getActionCommand())){
+            this.gameBoardController.toggleDebug();
         }
     }
 
