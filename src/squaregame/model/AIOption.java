@@ -26,6 +26,7 @@ public class AIOption {
     public String getId() {
         return defaultSquareLogic.getSquareName();
     }
+
     public SquareLogic getDefaultSquare() {
         return defaultSquareLogic;
     }

@@ -17,8 +17,8 @@ public class AISelectorComboBox extends JList<AIOption> {
         this.setOpaque(false);
         this.setCellRenderer(new MyCellRenderer());
         this.addListSelectionListener(event -> {
-            if (!event.getValueIsAdjusting()){
-                final AISelectorComboBox aiSelectorComboBox = (AISelectorComboBox)event.getSource();
+            if (!event.getValueIsAdjusting()) {
+                final AISelectorComboBox aiSelectorComboBox = (AISelectorComboBox) event.getSource();
                 AIOption aiOption = aiSelectorComboBox.getSelectedValue();
                 if (aiOption != null) {
                     player.aiOption = aiOption;

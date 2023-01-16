@@ -2,9 +2,8 @@ package squaregame.view;
 
 import squaregame.controller.GameBoardController;
 
-import java.awt.*;
-
 import javax.swing.*;
+import java.awt.*;
 
 import static squaregame.view.PlayerView.newColorWithAlpha;
 
@@ -27,7 +26,7 @@ public class GameBoardPanel extends JPanel {
         draw(g2);
     }
 
-    public void draw(Graphics2D g2){
+    public void draw(Graphics2D g2) {
         final int squareSize = getSquareSize();
         for (int i = 0; i < this.gameBoardController.getGameBoard().getBoardSize(); i++) {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {

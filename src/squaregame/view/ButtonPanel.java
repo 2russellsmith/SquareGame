@@ -1,19 +1,14 @@
 package squaregame.view;
 
 import squaregame.controller.GameBoardController;
-import squaregame.model.Leaderboard;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import static squaregame.view.PlayerView.newColorWithAlpha;
 
 public class ButtonPanel extends JPanel implements ActionListener {
     public JButton startButton, stopButton, resetButton, leaderboardButton, oneRoundButton, debugModeButton;
@@ -62,22 +57,22 @@ public class ButtonPanel extends JPanel implements ActionListener {
             this.oneRoundButton.setVisible(true);
             this.debugModeButton.setVisible(true);
             this.resetButton.setVisible(true);
-        } else if ("StopGame".equals(e.getActionCommand())){
+        } else if ("StopGame".equals(e.getActionCommand())) {
             this.gameBoardController.stopGame();
             stopButton.setVisible(false);
             startButton.setVisible(true);
-        } else if ("OneRound".equals(e.getActionCommand())){
+        } else if ("OneRound".equals(e.getActionCommand())) {
             this.gameBoardController.oneRound();
             stopButton.setVisible(false);
             startButton.setVisible(true);
-        } else if ("ResetGame".equals(e.getActionCommand())){
+        } else if ("ResetGame".equals(e.getActionCommand())) {
             this.gameBoardController.resetGame(false);
             stopButton.setVisible(false);
             startButton.setVisible(true);
             this.oneRoundButton.setVisible(false);
             this.debugModeButton.setVisible(false);
             this.resetButton.setVisible(false);
-        } else if ("Leaderboard".equals(e.getActionCommand())){
+        } else if ("Leaderboard".equals(e.getActionCommand())) {
             startButton.setVisible(false);
             stopButton.setVisible(true);
             this.oneRoundButton.setVisible(true);
@@ -85,7 +80,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
             this.gameBoardController.resetGame(true);
             this.gameBoardController.startGame();
             this.resetButton.setVisible(true);
-        } else if ("DebugMode".equals(e.getActionCommand())){
+        } else if ("DebugMode".equals(e.getActionCommand())) {
             this.gameBoardController.toggleDebug();
             this.gameBoardController.updateLeaderboards();
         }

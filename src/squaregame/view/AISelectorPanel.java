@@ -2,20 +2,21 @@ package squaregame.view;
 
 import lombok.Getter;
 import squaregame.controller.GameBoardController;
-import squaregame.model.Player;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-
-import static squaregame.controller.GameBoardController.GLOBAL_FONT;
 import static squaregame.controller.GameBoardController.getGlobalFont;
 import static squaregame.view.PlayerView.newColorWithAlpha;
 
@@ -32,27 +33,37 @@ public class AISelectorPanel extends JPanel implements ActionListener {
         this.setLayout(new GridBagLayout());
         final AtomicInteger playerNumber = new AtomicInteger();
         this.gameBoardController.getGameState().getPlayerList()
-            .forEach(p -> {
-                GridBagConstraints c = new GridBagConstraints();
-                c.fill = GridBagConstraints.BOTH;
-                c.weightx = 1;
-                c.weighty = 1;
-                c.insets = new Insets(2, 2, 2, 2);
-                final AISelectorComboBox aiSelectorComboBox = new AISelectorComboBox(this.gameBoardController.getGameState(), p);
-                comboBoxes.add(aiSelectorComboBox);
-                c.gridx = playerNumber.get() % 4;
-                c.gridy = (playerNumber.get() / 4) * 2;
-                JLabel fighterLabel = new JLabel("FIGHTER " + (playerNumber.get() + 1), SwingConstants.CENTER);
-                fighterLabel.setBackground(newColorWithAlpha(Color.darkGray));
-                fighterLabel.setForeground(new Color(105, 166, 201));
-                fighterLabel.setFont(getGlobalFont(24));
-                fighterLabel.setOpaque(true);
+                .forEach(p -> {
+                    GridBagConstraints c = new GridBagConstraints();
+                    c.fill = GridBagConstraints.BOTH;
+                    c.weightx = 1;
+                    c.weighty = .5;
+                    c.insets = new Insets(2, 2, 2, 2);
+                    c.gridx = playerNumber.get() % 4;
+                    c.gridy = (playerNumber.get() / 4) * 2;
+                    JLabel fighterLabel = new JLabel("FIGHTER " + (playerNumber.get() + 1), SwingConstants.CENTER);
+                    fighterLabel.setBackground(newColorWithAlpha(Color.darkGray));
+                    fighterLabel.setForeground(new Color(105, 166, 201));
+                    fighterLabel.setFont(getGlobalFont(24));
+                    fighterLabel.setOpaque(true);
 
-                add(fighterLabel, c);
-                c.weighty = 4;
-                c.gridy = (playerNumber.getAndIncrement() / 4) * 2 + 1;
-                add(aiSelectorComboBox, c);
-            });
+                    add(fighterLabel, c);
+                    c.weighty = 4;
+                    c.gridy = (playerNumber.getAndIncrement() / 4) * 2 + 1;
+                    final AISelectorComboBox aiSelectorComboBox = new AISelectorComboBox(this.gameBoardController.getGameState(), p);
+                    comboBoxes.add(aiSelectorComboBox);
+                    aiSelectorComboBox.setFocusable(false);
+                    JScrollPane scrollPane = new JScrollPane(aiSelectorComboBox);
+                    scrollPane.getViewport().setOpaque(false);
+                    scrollPane.setOpaque(false);
+                    scrollPane.setVisible(false);
+                    try {
+                        add(new AddPlayerButton(scrollPane, p), c);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    add(scrollPane, c);
+                });
     }
 
     public void resize() {
@@ -61,7 +72,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ("Leaderboard".equals(e.getActionCommand())){
+        if ("Leaderboard".equals(e.getActionCommand())) {
             final ArrayList<Integer> aiOptions = new ArrayList<>();
             for (int i = 1; i < this.gameBoardController.getGameState().getAiOptions().size(); i++) {
                 aiOptions.add(i);
@@ -82,9 +93,5 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                 this.comboBoxes.get(i).setSelectedIndex(aiOptions.get(i));
             }
         }
-    }
-
-    public List<AISelectorComboBox> getComboBoxes() {
-        return comboBoxes;
     }
 }

@@ -2,11 +2,8 @@ package squaregame.model;
 
 import lombok.Getter;
 import squaregame.squares.SquareLogic;
-import squaregame.view.AISelectorComboBox;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -18,17 +15,17 @@ public class Player {
     public Color textColor;
     public AIOption aiOption;
 
-    public Player (Color color, AIOption aiOption) {
+    public Player(Color color, AIOption aiOption) {
         this.color = color;
         this.setTextColor();
         this.aiOption = aiOption;
     }
 
 
-
     public Color getColor() {
         return color;
     }
+
     public void setTextColor() {
         // original coefficients
         final double cr = 0.241;

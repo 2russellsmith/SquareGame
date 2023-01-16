@@ -3,14 +3,9 @@ package squaregame.model;
 import org.reflections.Reflections;
 import squaregame.squares.SquareLogic;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.awt.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -18,19 +13,16 @@ import java.util.stream.IntStream;
  * Created by Russell on 5/5/18.
  */
 public class GameState {
+    private static final int MAX_PLAYERS = 8;
+    private final List<Player> playerList;
+    private final List<AIOption> aiOptions;
+    private final Leaderboard freeForAllLeaderboard;
+    private final Leaderboard leaderboard;
+    private final Map<Player, Score> scoreBoard;
     private int roundNumber;
     private int totalRounds = 3000;
-
-    private static int MAX_PLAYERS = 8;
-
-    private List<Player> playerList;
     private Map<Player, Set<Player>> whoPlayersBeat;
-    private List<AIOption> aiOptions;
     private boolean freeForAll;
-    private Leaderboard freeForAllLeaderboard;
-    private Leaderboard leaderboard;
-
-    private Map<Player, Score> scoreBoard;
 
     public GameState() {
         roundNumber = 0;
@@ -74,19 +66,19 @@ public class GameState {
                 final int K = 100;
                 final int winnerMmr = this.freeForAllLeaderboard.getScore(winner.getAiOption().getId());
                 final int loserMmr = this.freeForAllLeaderboard.getScore(loser.getAiOption().getId());
-                final double gameMmrValue = (1 - ((double)winnerMmr / (winnerMmr + loserMmr))) * K;
-                this.freeForAllLeaderboard.addScore(winner.getAiOption().getId(), (int)gameMmrValue);
-                this.freeForAllLeaderboard.addScore(loser.getAiOption().getId(), -(int)gameMmrValue);
+                final double gameMmrValue = (1 - ((double) winnerMmr / (winnerMmr + loserMmr))) * K;
+                this.freeForAllLeaderboard.addScore(winner.getAiOption().getId(), (int) gameMmrValue);
+                this.freeForAllLeaderboard.addScore(loser.getAiOption().getId(), -(int) gameMmrValue);
             }));
         } else {
             this.whoPlayersBeat.forEach((winner, value) -> value.forEach(loser -> {
                 final int K = 50;
                 final int winnerMmr = this.leaderboard.getScore(winner.getAiOption().getId());
                 final int loserMmr = this.leaderboard.getScore(loser.getAiOption().getId());
-                final double gameMmrValue = (1 - ((double)winnerMmr / (winnerMmr + loserMmr))) * K;
+                final double gameMmrValue = (1 - ((double) winnerMmr / (winnerMmr + loserMmr))) * K;
                 System.out.println("GameMMR Value" + gameMmrValue);
-                this.leaderboard.addScore(winner.getAiOption().getId(), (int)gameMmrValue);
-                this.leaderboard.addScore(loser.getAiOption().getId(), -(int)gameMmrValue);
+                this.leaderboard.addScore(winner.getAiOption().getId(), (int) gameMmrValue);
+                this.leaderboard.addScore(loser.getAiOption().getId(), -(int) gameMmrValue);
             }));
         }
     }

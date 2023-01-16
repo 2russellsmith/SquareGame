@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PlayerView extends JPanel {
-    private ScoreView scoreView;
-    private Player p;
+    private final ScoreView scoreView;
+    private final Player p;
 
 
     public PlayerView(Player p) {
@@ -20,6 +20,14 @@ public class PlayerView extends JPanel {
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.BOTH;
         this.add(scoreView, gbc);
+    }
+
+    public static Color newColorWithAlpha(Color original, int alpha) {
+        return new Color(original.getRed(), original.getGreen(), original.getBlue(), alpha);
+    }
+
+    public static Color newColorWithAlpha(Color original) {
+        return newColorWithAlpha(original, 200);
     }
 
     public void setGenerated(int generated) {
@@ -45,6 +53,7 @@ public class PlayerView extends JPanel {
             this.scoreView.getScore().setText(String.valueOf(score));
         }
     }
+
     public void setPlayerName(String name) {
         this.scoreView.getPlayerName().setText(name);
     }
@@ -57,18 +66,13 @@ public class PlayerView extends JPanel {
         this.scoreView.getTurnClock().setText("TurnClock:" + avgTurnTime);
     }
 
-    public void setColor(){
+    public void setColor() {
         this.scoreView.setOpaque(false);
         this.scoreView.setColor(this.p);
         this.setBackground(newColorWithAlpha(this.p.getColor()));
     }
+
     public void setDebugView(boolean debug) {
         this.scoreView.setDebugView(debug);
-    }
-    public static Color newColorWithAlpha(Color original, int alpha) {
-        return new Color(original.getRed(), original.getGreen(), original.getBlue(), alpha);
-    }
-    public static Color newColorWithAlpha(Color original) {
-        return newColorWithAlpha(original, 200);
     }
 }

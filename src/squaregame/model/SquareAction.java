@@ -21,12 +21,15 @@ public class SquareAction {
     public static SquareAction move(Direction direction, SquareLogic squareLogic) {
         return new SquareAction(Action.MOVE, direction, squareLogic, null);
     }
+
     public static SquareAction replicate(Direction direction, SquareLogic squareLogic, SquareLogic replicated) {
         return new SquareAction(Action.REPLICATE, direction, squareLogic, replicated);
     }
+
     public static SquareAction wait(SquareLogic squareLogic) {
         return new SquareAction(Action.WAIT, null, squareLogic, null);
     }
+
     public static SquareAction attack(Direction direction, SquareLogic squareLogic) {
         return new SquareAction(Action.ATTACK, direction, squareLogic, null);
     }

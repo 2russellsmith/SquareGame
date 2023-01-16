@@ -1,15 +1,12 @@
 package squaregame.view;
 
-import squaregame.controller.GameBoardController;
 import squaregame.model.GameState;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import javax.swing.*;
 
 import static squaregame.controller.GameBoardController.GLOBAL_FONT;
 import static squaregame.view.PlayerView.newColorWithAlpha;
@@ -33,14 +30,16 @@ public class LeaderboardPanel extends JPanel {
         this.freeForAllLeaderboard.setBackground(newColorWithAlpha(Color.BLACK));
         this.oneVsOneLeaderboard.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         this.freeForAllLeaderboard.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        this.setPreferredSize(new Dimension(2, 2));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(150, 10, 10, 10);
         this.add(oneVsOneLeaderboard, gbc);
         gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10);
         this.add(freeForAllLeaderboard, gbc);
     }
 

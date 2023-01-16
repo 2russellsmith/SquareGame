@@ -1,13 +1,11 @@
 package squaregame.view;
 
 import lombok.Getter;
-import lombok.Setter;
 import squaregame.model.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-
-import javax.swing.*;
 
 import static squaregame.controller.GameBoardController.GLOBAL_FONT;
 

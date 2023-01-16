@@ -3,12 +3,11 @@ package squaregame;
 import squaregame.controller.GameBoardController;
 import squaregame.view.BackgroundPanel;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 
 public class SquareGameMain {
 
@@ -29,8 +28,6 @@ public class SquareGameMain {
 
     public static void main(String arg[]) {
         try {
-            // Set cross-platform Java L&F (also called "Metal")
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             SwingUtilities.invokeLater(() -> {
                 try {
                     new SquareGameMain();
@@ -38,8 +35,7 @@ public class SquareGameMain {
                     throw new RuntimeException(e);
                 }
             });
-        }
-        catch (UnsupportedLookAndFeelException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+        } catch (Exception e) {
             // handle exception
         }
     }

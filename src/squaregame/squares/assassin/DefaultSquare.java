@@ -12,14 +12,13 @@ import java.util.Set;
 
 public class DefaultSquare extends SquareLogic {
 
-    private int aliveTurn = 0;
-
     private static final Set<Direction> VALID_DIRECTIONS = new HashSet<>(Arrays.asList(Direction.W, Direction.S, Direction.SW));
+    private int aliveTurn = 0;
 
     @Override
     public SquareAction run(SquareView squareView) {
 
-        final Optional<Direction> direction =  squareView.getEmptyDirections().stream().filter(VALID_DIRECTIONS::contains).findAny();
+        final Optional<Direction> direction = squareView.getEmptyDirections().stream().filter(VALID_DIRECTIONS::contains).findAny();
 
         return direction.map(d -> SquareAction.replicate(d, this, new AssassinSquare(Direction.values()[aliveTurn++ % 8])))
                 .orElseGet(() -> SquareAction.wait(this));

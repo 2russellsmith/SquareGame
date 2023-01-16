@@ -35,9 +35,9 @@ class MyCellRenderer extends JLabel implements ListCellRenderer<AIOption> {
 
             // unselected, and not the DnD drop location
         } else {
-            background = new Color(105, 166, 201);
-            foreground = Color.BLACK;
-        };
+            background = new Color(105, 166, 201, 120);
+            foreground = Color.WHITE;
+        }
         setFont(getGlobalFont(20));
         setBackground(background);
         setForeground(foreground);

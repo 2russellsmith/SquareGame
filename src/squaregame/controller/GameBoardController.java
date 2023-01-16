@@ -1,43 +1,31 @@
 package squaregame.controller;
 
-import squaregame.model.Direction;
-import squaregame.model.GameBoard;
-import squaregame.model.GameState;
-import squaregame.model.KillEvent;
-import squaregame.model.Location;
-import squaregame.model.MagicSquare;
-import squaregame.model.Player;
-import squaregame.model.PlayerAllowedMetadata;
-import squaregame.model.Score;
-import squaregame.model.SquareAction;
-import squaregame.model.SquareView;
+import squaregame.model.*;
 import squaregame.view.*;
 
+import javax.swing.Timer;
+import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import javax.swing.*;
-import javax.swing.Timer;
 
 import static squaregame.view.PlayerView.newColorWithAlpha;
 
 public class GameBoardController {
 
     private static final int INACTIVE_COUNT = 100;
+    public static Font GLOBAL_FONT = new Font(Font.DIALOG, Font.PLAIN, 24);
     private final LeaderboardPanel leaderBoardPanel;
     private final ButtonPanel buttonPanel;
     private final AISelectorPanel aiSelectorPanel;
-
-    private Timer timer;
-
-    private GameBoard gameBoard;
     private final GameState gameState;
     private final JPanel mainPanel;
     private final JPanel gamePanel;
+    private Timer timer;
+    private GameBoard gameBoard;
     private boolean isLeaderBoardMode = false;
     private JButton runLeaderboardRoundButton;
     private JPanel scoreBoardPanel;
@@ -45,12 +33,10 @@ public class GameBoardController {
     private boolean debugEnabled = false;
     private Map<Player, PlayerView> playerViewMap;
 
-    public static Font GLOBAL_FONT = new Font(Font.DIALOG, Font.PLAIN, 24);
-
     public GameBoardController(JPanel mainPanel) {
         this.mainPanel = mainPanel;
-        this.mainPanel.setLayout( new GridBagLayout() );
-        GLOBAL_FONT = getGlobalFont(this.mainPanel.getHeight() / 60 );
+        this.mainPanel.setLayout(new GridBagLayout());
+        GLOBAL_FONT = getGlobalFont(this.mainPanel.getHeight() / 60);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
@@ -63,7 +49,7 @@ public class GameBoardController {
         this.aiSelectorPanel = new AISelectorPanel(this);
         gbc.insets = new Insets(150, 150, 0, 150);
         this.mainPanel.add(this.aiSelectorPanel, gbc);
-        this.buttonPanel = new  ButtonPanel(this);
+        this.buttonPanel = new ButtonPanel(this);
         this.runLeaderboardRoundButton.addActionListener(this.aiSelectorPanel);
         this.leaderBoardPanel = new LeaderboardPanel();
         this.updateLeaderboards();
@@ -86,6 +72,14 @@ public class GameBoardController {
         this.mainPanel.setVisible(true);
         this.aiSelectorPanel.resize();
         resetGame(false);
+    }
+
+    public static Font getGlobalFont(int size) {
+        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), size);
+    }
+
+    public static Font getGlobalFont() {
+        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), GLOBAL_FONT.getSize());
     }
 
     public void runRound() {
@@ -184,13 +178,13 @@ public class GameBoardController {
                 .sorted(Comparator.comparing(p -> this.gameState.getScoreBoard().get(p).getScore()).reversed())
                 .collect(Collectors.toList());
         sortedPlayers.forEach(p -> {
-                    GridBagConstraints gbc = new GridBagConstraints();
-                    gbc.gridy = row.getAndIncrement();
-                    gbc.fill = GridBagConstraints.BOTH;
-                    gbc.anchor = GridBagConstraints.WEST;
-                    this.scoreBoardPanel.add(this.playerViewMap.get(p), gbc);
-                    this.playerViewMap.get(p).setVisible(true);
-                });
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridy = row.getAndIncrement();
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.anchor = GridBagConstraints.WEST;
+            this.scoreBoardPanel.add(this.playerViewMap.get(p), gbc);
+            this.playerViewMap.get(p).setVisible(true);
+        });
     }
 
     public void setStartingPositions() {
@@ -302,6 +296,7 @@ public class GameBoardController {
     public void stopGame() {
         this.timer.stop();
     }
+
     public void oneRound() {
         this.timer.stop();
         this.runRound();
@@ -324,7 +319,7 @@ public class GameBoardController {
         setScoreBoard();
         gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
             final Score score = gameState.getScoreBoard().get(p);
-            GLOBAL_FONT = new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), this.mainPanel.getHeight() / 60 );
+            GLOBAL_FONT = new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), this.mainPanel.getHeight() / 60);
             this.playerViewMap.get(p).setPlayerName(p.getName());
             this.playerViewMap.get(p).setDebug(this.debugEnabled);
             this.playerViewMap.get(p).setScore(score.getScore(), this.debugEnabled);
@@ -336,13 +331,6 @@ public class GameBoardController {
             this.playerViewMap.get(p).setColor();
             this.playerViewMap.get(p).setDebugView(this.debugEnabled);
         });
-    }
-
-    public static Font getGlobalFont(int size) {
-        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), size);
-    }
-    public static Font getGlobalFont() {
-        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), GLOBAL_FONT.getSize());
     }
 
     public void setRunLeaderboardRoundButton(JButton runLeaderboardRoundButton) {
