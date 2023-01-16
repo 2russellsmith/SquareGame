@@ -7,8 +7,9 @@ import squaregame.model.Player;
 import java.awt.*;
 import java.util.Arrays;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+
+import static squaregame.controller.GameBoardController.GLOBAL_FONT;
 
 @Getter
 public class ScoreView extends JPanel {
@@ -26,52 +27,43 @@ public class ScoreView extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = .25;
+        gbc.weighty = 1;
         gbc.gridheight = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        this.playerName = new JLabel();
-        playerName.setPreferredSize(new Dimension(200, 20));
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        this.playerName = new JLabel("", SwingConstants.LEFT);
         add(playerName, gbc);
-
 
         gbc.gridheight = 1;
         gbc.gridx = 1;
         gbc.gridy = 0;
-        this.score = new JLabel("Score=  ");
-        score.setPreferredSize(new Dimension(200, 20));
+        this.score = new JLabel(":", SwingConstants.LEFT);
         add(score, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        this.generated = new JLabel("Generated=  ");
-        generated.setPreferredSize(new Dimension(200, 20));
+        this.generated = new JLabel("Generated=  ", SwingConstants.LEFT);
         add(generated, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = 0;
-        this.kills = new JLabel("Kills=  ");
-        kills.setPreferredSize(new Dimension(200, 20));
+        this.kills = new JLabel("Kills=  ", SwingConstants.LEFT);
         add(kills, gbc);
-
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        this.turnClock = new JLabel("TurnClock=  ");
-        turnClock.setPreferredSize(new Dimension(200, 20));
+        this.turnClock = new JLabel("TurnClock=  ", SwingConstants.LEFT);
         add(turnClock, gbc);
-
 
         gbc.gridx = 2;
         gbc.gridy = 1;
-        this.collisions = new JLabel("Collisions=  ");
-        collisions.setPreferredSize(new Dimension(200, 20));
+        this.collisions = new JLabel("Collisions=  ", SwingConstants.LEFT);
         add(collisions, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = 1;
-        this.eliminated = new JLabel("Eliminated=  ");
-        eliminated.setPreferredSize(new Dimension(200, 20));
+        this.eliminated = new JLabel("Eliminated=  ", SwingConstants.LEFT);
         add(eliminated, gbc);
     }
 
@@ -87,6 +79,8 @@ public class ScoreView extends JPanel {
     public void setColor(Player player) {
         Arrays.stream(this.getComponents()).forEach(comp -> {
             comp.setForeground(player.getTextColor());
+            comp.setPreferredSize(new Dimension(2, 20));
+            comp.setFont(GLOBAL_FONT);
         });
     }
 }

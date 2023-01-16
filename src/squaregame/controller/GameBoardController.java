@@ -37,50 +37,61 @@ public class GameBoardController {
     private GameBoard gameBoard;
     private final GameState gameState;
     private final JPanel mainPanel;
-    private final JLayeredPane gamePanel;
+    private final JPanel gamePanel;
     private boolean isLeaderBoardMode = false;
     private JButton runLeaderboardRoundButton;
     private JPanel scoreBoardPanel;
     private JLabel roundLabel;
     private boolean debugEnabled = false;
+    private Map<Player, PlayerView> playerViewMap;
+
+    public static Font GLOBAL_FONT = new Font(Font.DIALOG, Font.PLAIN, 24);
 
     public GameBoardController(JPanel mainPanel) {
         this.mainPanel = mainPanel;
-        this.gamePanel = new JLayeredPane();
+        this.mainPanel.setLayout( new GridBagLayout() );
+        GLOBAL_FONT = getGlobalFont(this.mainPanel.getHeight() / 60 );
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
+        this.gamePanel = new JPanel();
         this.mainPanel.add(gamePanel, gbc);
         this.gameBoard = new GameBoard(150);
         this.gameState = new GameState();
+        this.playerViewMap = new HashMap<>();
         this.aiSelectorPanel = new AISelectorPanel(this);
-        this.buttonPanel = new ButtonPanel(this);
+        gbc.insets = new Insets(150, 150, 0, 150);
+        this.mainPanel.add(this.aiSelectorPanel, gbc);
+        this.buttonPanel = new  ButtonPanel(this);
         this.runLeaderboardRoundButton.addActionListener(this.aiSelectorPanel);
-        this.leaderBoardPanel = new LeaderboardPanel(this);
+        this.leaderBoardPanel = new LeaderboardPanel();
+        this.updateLeaderboards();
         final GameBoardPanel gameBoardPanel = new GameBoardPanel(this);
-        this.gamePanel.setMinimumSize(mainPanel.getMaximumSize());
         this.gamePanel.setOpaque(false);
         this.gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbcGamePanel = new GridBagConstraints();
-        gbcGamePanel.anchor = GridBagConstraints.CENTER;
-        gbcGamePanel.gridwidth = 5;
+        gbcGamePanel.fill = GridBagConstraints.BOTH;
+        gbcGamePanel.weightx = .5;
+        this.gamePanel.add(this.leaderBoardPanel, gbcGamePanel);
+        gbcGamePanel.weightx = 0;
         this.gamePanel.add(gameBoardPanel, gbcGamePanel);
         this.gamePanel.setMinimumSize(mainPanel.getMaximumSize());
         this.gamePanel.setVisible(false);
-        this.mainPanel.setLayout( new GridBagLayout() );
-        this.mainPanel.add(this.aiSelectorPanel, gbc);
         GridBagConstraints gbcButtons = new GridBagConstraints();
         gbcButtons.fill = GridBagConstraints.HORIZONTAL;
         gbcButtons.gridy = 1;
+        gbc.weighty = .1;
         this.mainPanel.add(this.buttonPanel, gbcButtons);
         this.mainPanel.setVisible(true);
+        this.aiSelectorPanel.resize();
         resetGame(false);
     }
 
     public void runRound() {
         runAllTurns();
         this.updateGameScore();
-        this.gamePanel.repaint();
+        this.updateLeaderboards();
         if (this.gameState.gameOver()) {
             this.gameOver();
         } else {
@@ -94,13 +105,12 @@ public class GameBoardController {
             this.gameState.finalRank();
             this.updateLeaderboards();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             this.runLeaderboardRoundButton.doClick();
         }
-
     }
 
     public void startGame() {
@@ -135,7 +145,7 @@ public class GameBoardController {
             this.timer.stop();
         }
         this.gameState.reset();
-        this.gamePanel.repaint();
+        this.mainPanel.repaint();
     }
 
     public void toggleDebug() {
@@ -148,16 +158,26 @@ public class GameBoardController {
             this.scoreBoardPanel.setOpaque(false);
             this.scoreBoardPanel.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridwidth = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.weightx = .5;
+            gbc.gridx = 2;
+            gbc.gridy = 0;
             this.gamePanel.add(scoreBoardPanel, gbc);
-
+            this.getGameState().getPlayerList().forEach(p -> {
+                final PlayerView playerView = new PlayerView(p);
+                playerViewMap.put(p, playerView);
+            });
             this.roundLabel = new JLabel("ROUND: 0");
+            this.roundLabel.setFont(GLOBAL_FONT);
             this.roundLabel.setForeground(Color.WHITE);
             this.roundLabel.setBackground(newColorWithAlpha(Color.BLACK));
             this.roundLabel.setOpaque(true);
-            this.scoreBoardPanel.add(roundLabel);
+            GridBagConstraints gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.weightx = 1;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            this.scoreBoardPanel.add(roundLabel, gridBagConstraints);
         }
-        this.aiSelectorPanel.getPlayerViewMap().values().forEach(pv -> pv.setVisible(false));
+        this.playerViewMap.values().forEach(pv -> pv.setVisible(false));
         final AtomicInteger row = new AtomicInteger(1);
         List<Player> sortedPlayers = this.gameState.getPlayerList().stream()
                 .filter(Player::isPlaying)
@@ -167,8 +187,9 @@ public class GameBoardController {
                     GridBagConstraints gbc = new GridBagConstraints();
                     gbc.gridy = row.getAndIncrement();
                     gbc.fill = GridBagConstraints.BOTH;
-                    this.scoreBoardPanel.add(this.aiSelectorPanel.getPlayerViewMap().get(p), gbc);
-                    this.aiSelectorPanel.getPlayerViewMap().get(p).setVisible(true);
+                    gbc.anchor = GridBagConstraints.WEST;
+                    this.scoreBoardPanel.add(this.playerViewMap.get(p), gbc);
+                    this.playerViewMap.get(p).setVisible(true);
                 });
     }
 
@@ -287,27 +308,41 @@ public class GameBoardController {
     }
 
     public void updateLeaderboards() {
-        this.leaderBoardPanel.update(gameState);
+        if (debugEnabled) {
+            this.leaderBoardPanel.setVisible(false);
+        } else {
+            this.leaderBoardPanel.setVisible(true);
+            this.leaderBoardPanel.update(gameState);
+        }
+        this.gamePanel.revalidate();
+        this.gamePanel.repaint();
     }
 
     public void updateGameScore() {
         this.roundLabel.setText("ROUND: " + gameState.getRoundNumber());
+        this.roundLabel.setFont(GLOBAL_FONT);
         setScoreBoard();
         gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
             final Score score = gameState.getScoreBoard().get(p);
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setPlayerName(p.getName());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setDebug(this.debugEnabled);
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setScore(score.getScore());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setCollisions(score.getCollisions());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setEliminated(score.getEliminated());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setGenerated(score.getGenerated());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setKills(score.getKilled());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setTurnClock(score.getAvgTurnTime());
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setColor();
-            this.aiSelectorPanel.getPlayerViewMap().get(p).setDebugView(this.debugEnabled);
-            this.aiSelectorPanel.getPlayerViewMap().get(p).repaint();
+            GLOBAL_FONT = new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), this.mainPanel.getHeight() / 60 );
+            this.playerViewMap.get(p).setPlayerName(p.getName());
+            this.playerViewMap.get(p).setDebug(this.debugEnabled);
+            this.playerViewMap.get(p).setScore(score.getScore(), this.debugEnabled);
+            this.playerViewMap.get(p).setCollisions(score.getCollisions());
+            this.playerViewMap.get(p).setEliminated(score.getEliminated());
+            this.playerViewMap.get(p).setGenerated(score.getGenerated());
+            this.playerViewMap.get(p).setKills(score.getKilled());
+            this.playerViewMap.get(p).setTurnClock(score.getAvgTurnTime());
+            this.playerViewMap.get(p).setColor();
+            this.playerViewMap.get(p).setDebugView(this.debugEnabled);
         });
-        this.gamePanel.repaint();
+    }
+
+    public static Font getGlobalFont(int size) {
+        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), size);
+    }
+    public static Font getGlobalFont() {
+        return new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), GLOBAL_FONT.getSize());
     }
 
     public void setRunLeaderboardRoundButton(JButton runLeaderboardRoundButton) {

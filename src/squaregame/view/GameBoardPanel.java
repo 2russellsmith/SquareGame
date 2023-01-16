@@ -13,13 +13,10 @@ import static squaregame.view.PlayerView.newColorWithAlpha;
  */
 public class GameBoardPanel extends JPanel {
 
-    public static Integer MAX_BOARD_SIZE = 900;
     private final GameBoardController gameBoardController;
 
     public GameBoardPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
-
-        setPreferredSize(new Dimension(GameBoardPanel.MAX_BOARD_SIZE, GameBoardPanel.MAX_BOARD_SIZE));
         setBackground(newColorWithAlpha(Color.BLACK));
     }
 
@@ -36,7 +33,7 @@ public class GameBoardPanel extends JPanel {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {
                 if (this.gameBoardController.getGameBoard().get(i, j) != null) {
                     g2.setColor(this.gameBoardController.getGameBoard().get(i, j).getPlayer().getColor());
-                    g2.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                    g2.drawRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 }
             }
         }
@@ -44,9 +41,11 @@ public class GameBoardPanel extends JPanel {
                 squareSize * this.gameBoardController.getGameBoard().getBoardSize()));
         this.setMinimumSize(new Dimension(squareSize * this.gameBoardController.getGameBoard().getBoardSize(),
                 squareSize * this.gameBoardController.getGameBoard().getBoardSize()));
+        this.setMaximumSize(new Dimension(squareSize * this.gameBoardController.getGameBoard().getBoardSize(),
+                squareSize * this.gameBoardController.getGameBoard().getBoardSize()));
     }
 
     public int getSquareSize() {
-        return MAX_BOARD_SIZE / this.gameBoardController.getGameBoard().getBoardSize();
+        return this.getParent().getHeight() / this.gameBoardController.getGameBoard().getBoardSize();
     }
 }

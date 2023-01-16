@@ -37,19 +37,19 @@ public class GameState {
         final Reflections reflections = new Reflections("squaregame.squares");
         final Set<Class<? extends SquareLogic>> classes = reflections.getSubTypesOf(SquareLogic.class);
         aiOptions = new ArrayList<>();
-        aiOptions.add(null);
         final AtomicInteger aiId = new AtomicInteger(0);
         classes.forEach(c -> {
             if (c.getSimpleName().equals("DefaultSquare")) {
                 aiOptions.add(new AIOption((Class<SquareLogic>) c, aiId.getAndIncrement()));
             }
         });
+        aiOptions.sort(Comparator.comparing(AIOption::getId));
         this.whoPlayersBeat = new HashMap<>();
         this.leaderboard = new Leaderboard(aiOptions, "LEADERBOARD");
         this.freeForAllLeaderboard = new Leaderboard(aiOptions, "FREEFORALL");
         this.scoreBoard = new HashMap<>();
         playerList = new ArrayList<>();
-        IntStream.rangeClosed(1, MAX_PLAYERS).forEach((i) -> playerList.add(new Player(Color.WHITE, aiOptions.get(0))));
+        IntStream.rangeClosed(1, MAX_PLAYERS).forEach((i) -> playerList.add(new Player(Color.WHITE, null)));
 
     }
 

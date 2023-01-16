@@ -23,6 +23,7 @@ public class SquareGameMain {
         BackgroundPanel backgroundPanel = new BackgroundPanel(ImageIO.read(new File("src/squaregame/background.png")));
         backgroundPanel.add(mainPanel);
         mainFrame.add(backgroundPanel);
+        mainPanel.setMinimumSize(mainFrame.getSize());
         new GameBoardController(mainPanel);
     }
 

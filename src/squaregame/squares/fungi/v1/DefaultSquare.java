@@ -34,9 +34,4 @@ public class DefaultSquare extends SquareLogic {
     public String getSquareName() {
         return "Fungi";
     }
-
-    @Override
-    public Color getColor() {
-        return Color.green;
-    }
 }
