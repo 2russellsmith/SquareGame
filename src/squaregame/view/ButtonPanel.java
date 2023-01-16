@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class ButtonPanel extends JPanel implements ActionListener {
-    public JButton startButton, stopButton, resetButton, leaderboardButton, oneRoundButton, debugModeButton;
-    private GameBoardController gameBoardController;
+    public JButton startButton, stopButton, resetButton, leaderboardButton, timerSpeedButton, debugModeButton;
+    private final GameBoardController gameBoardController;
 
     public ButtonPanel(GameBoardController gameBoardController) {
         this.gameBoardController = gameBoardController;
@@ -21,13 +21,13 @@ public class ButtonPanel extends JPanel implements ActionListener {
         this.setBackground(new Color(105, 166, 201));
         startButton = createButton("src/squaregame/play.png", "StartGame", "Starts the game");
         stopButton = createButton("src/squaregame/stop.png", "StopGame", "Stops the game");
-        oneRoundButton = createButton("src/squaregame/oneRound.png", "OneRound", "Moves the game one round");
+        timerSpeedButton = createButton("src/squaregame/speed.png", "TimerSpeed", "Changes the timer speed");
         resetButton = createButton("src/squaregame/reset.png", "ResetGame", "Resets the game");
         leaderboardButton = createButton("src/squaregame/leaderboardMode.png", "Leaderboard", "Starts Leaderboard Mode");
         debugModeButton = createButton("src/squaregame/debug.png", "DebugMode", "Toggle Debug Mode");
         gameBoardController.setRunLeaderboardRoundButton(this.leaderboardButton);
         this.stopButton.setVisible(false);
-        this.oneRoundButton.setVisible(false);
+        this.timerSpeedButton.setVisible(false);
         this.debugModeButton.setVisible(false);
         this.resetButton.setVisible(false);
     }
@@ -54,28 +54,28 @@ public class ButtonPanel extends JPanel implements ActionListener {
             this.gameBoardController.startGame();
             startButton.setVisible(false);
             stopButton.setVisible(true);
-            this.oneRoundButton.setVisible(true);
+            this.timerSpeedButton.setVisible(true);
             this.debugModeButton.setVisible(true);
             this.resetButton.setVisible(true);
         } else if ("StopGame".equals(e.getActionCommand())) {
             this.gameBoardController.stopGame();
             stopButton.setVisible(false);
             startButton.setVisible(true);
-        } else if ("OneRound".equals(e.getActionCommand())) {
-            this.gameBoardController.oneRound();
+        } else if ("TimerSpeed".equals(e.getActionCommand())) {
+            this.gameBoardController.advanceTimerSpeed();
             stopButton.setVisible(false);
             startButton.setVisible(true);
         } else if ("ResetGame".equals(e.getActionCommand())) {
             this.gameBoardController.resetGame(false);
             stopButton.setVisible(false);
             startButton.setVisible(true);
-            this.oneRoundButton.setVisible(false);
+            this.timerSpeedButton.setVisible(false);
             this.debugModeButton.setVisible(false);
             this.resetButton.setVisible(false);
         } else if ("Leaderboard".equals(e.getActionCommand())) {
             startButton.setVisible(false);
             stopButton.setVisible(true);
-            this.oneRoundButton.setVisible(true);
+            this.timerSpeedButton.setVisible(true);
             this.debugModeButton.setVisible(true);
             this.gameBoardController.resetGame(true);
             this.gameBoardController.startGame();

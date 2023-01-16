@@ -31,7 +31,8 @@ public class GameBoardController {
     private JPanel scoreBoardPanel;
     private JLabel roundLabel;
     private boolean debugEnabled = false;
-    private Map<Player, PlayerView> playerViewMap;
+    private final Map<Player, PlayerView> playerViewMap;
+    private int timerSpeed = 10;
 
     public GameBoardController(JPanel mainPanel) {
         this.mainPanel = mainPanel;
@@ -121,13 +122,7 @@ public class GameBoardController {
             }
             setScoreBoard();
             setStartingPositions();
-            if (isLeaderBoardMode) {
-                this.timer = new Timer(10, e -> runRound());
-            } else {
-                this.timer = new Timer(10, e -> {
-                    runRound();
-                });
-            }
+            this.timer = new Timer(this.timerSpeed, e -> runRound());
         }
         this.timer.start();
     }
@@ -299,9 +294,17 @@ public class GameBoardController {
         this.timer.stop();
     }
 
-    public void oneRound() {
+    public void advanceTimerSpeed() {
         this.timer.stop();
-        this.runRound();
+        if (this.timerSpeed == 0) {
+            this.timerSpeed = 10;
+        } else if (timerSpeed == 1000) {
+            this.timerSpeed = 1;
+        } else {
+            this.timerSpeed *= 10;
+        }
+        this.timer = new Timer(this.timerSpeed, e -> runRound());
+        this.timer.start();
     }
 
     public void updateLeaderboards() {
