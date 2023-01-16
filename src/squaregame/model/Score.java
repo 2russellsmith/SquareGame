@@ -14,15 +14,19 @@ public class Score {
     public void addPoint() {
         score++;
     }
+
     public void addGenerated() {
         generated++;
     }
+
     public void addKilled() {
         killed++;
     }
+
     public void addCollisions() {
         collisions++;
     }
+
     public void addEliminated() {
         eliminated++;
     }

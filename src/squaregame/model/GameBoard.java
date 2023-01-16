@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class GameBoard {
 
-    private MagicSquare[][] squares;
+    private final MagicSquare[][] squares;
 
     public GameBoard(int boardSize) {
         this.squares = new MagicSquare[boardSize][boardSize];

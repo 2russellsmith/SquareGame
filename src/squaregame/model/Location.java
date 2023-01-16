@@ -7,9 +7,9 @@ import lombok.Getter;
  */
 @Getter
 public class Location {
-    private int x;
-    private int y;
-    
+    private final int x;
+    private final int y;
+
     public Location(int x, int y, Direction direction, int boardSize) {
 
         this.x = Math.floorMod((direction.getxOffset() + x), boardSize);

@@ -1,10 +1,6 @@
 package squaregame.model;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +28,10 @@ public class Leaderboard {
             } catch (SQLException e) {
                 System.out.println(this.tableName + " already created");
             }
-            final ResultSet rs = stmt.executeQuery("SELECT * FROM "+ this.tableName + ";");
+            final ResultSet rs = stmt.executeQuery("SELECT * FROM " + this.tableName + ";");
             while (rs.next()) {
                 final String id = rs.getString("id");
-                final int mmr  = rs.getInt("mmr");
+                final int mmr = rs.getInt("mmr");
                 this.scoreboard.put(id, mmr);
             }
             aiOptions.stream().filter(Objects::nonNull).forEach(aiOption -> {

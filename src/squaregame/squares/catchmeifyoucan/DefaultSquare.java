@@ -19,7 +19,7 @@ public class DefaultSquare extends SquareLogic {
         } else if (enemyDirections.size() == 1) {
             return move(enemyDirections.get(0).getOppositeDirection());
         } else if (enemyDirections.size() == 2) {
-            int runDirection = (int)Math.floor(enemyDirections.stream().mapToInt(Enum::ordinal).average().getAsDouble());
+            int runDirection = (int) Math.floor(enemyDirections.stream().mapToInt(Enum::ordinal).average().getAsDouble());
             if (Math.abs(enemyDirections.get(0).ordinal() - enemyDirections.get(1).ordinal()) > 4) {
                 return move(Direction.values()[runDirection]);
             } else {

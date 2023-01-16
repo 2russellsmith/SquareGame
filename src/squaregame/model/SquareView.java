@@ -5,11 +5,11 @@ import java.util.List;
 
 public class SquareView {
 
-    private List<Player> view;
-    private Player player;
-    private int row;
-    private int col;
-    private PlayerAllowedMetadata playerAllowedMetadata;
+    private final List<Player> view;
+    private final Player player;
+    private final int row;
+    private final int col;
+    private final PlayerAllowedMetadata playerAllowedMetadata;
 
     public SquareView(List<Player> view, Player player, int row, int col, PlayerAllowedMetadata playerAllowedMetadata) {
         this.view = view;
@@ -54,6 +54,7 @@ public class SquareView {
         }
         return result;
     }
+
     public Player getLocation(Direction direction) {
         return view.get(direction.ordinal());
     }

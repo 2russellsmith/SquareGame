@@ -19,7 +19,7 @@ public class Swing extends SquareLogic {
         }
         final Direction moveDirection = DefaultSquare.startingDirection.rotateClockwise(Math.floorMod(turn-- / 250, 8) + 1);
         if (squareView.getLocation(moveDirection) == null) {
-            return SquareAction.move(moveDirection, this); 
+            return SquareAction.move(moveDirection, this);
         } else {
             return SquareAction.wait(this);
         }

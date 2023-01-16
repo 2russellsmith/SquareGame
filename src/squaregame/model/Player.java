@@ -2,39 +2,30 @@ package squaregame.model;
 
 import lombok.Getter;
 import squaregame.squares.SquareLogic;
-import squaregame.view.AISelectorComboBox;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by Russell on 5/5/18.
  */
 @Getter
-public class Player implements ActionListener {
-    private Color color;
-    private Color textColor;
-    private AIOption aiOption;
+public class Player {
+    public Color color;
+    public Color textColor;
+    public AIOption aiOption;
 
-    public Player (Color color, AIOption aiOption) {
+    public Player(Color color, AIOption aiOption) {
         this.color = color;
         this.setTextColor();
         this.aiOption = aiOption;
     }
 
-    public Player (Player player) {
-        replace(player);
-    }
-
-    public void replace(Player player) {
-        this.aiOption = player.aiOption;
-    }
 
     public Color getColor() {
         return color;
     }
+
     public void setTextColor() {
         // original coefficients
         final double cr = 0.241;
@@ -77,18 +68,5 @@ public class Player implements ActionListener {
 
     public boolean isPlaying() {
         return aiOption != null;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        final AISelectorComboBox aiSelectorComboBox = (AISelectorComboBox)e.getSource();
-        this.aiOption = (AIOption)aiSelectorComboBox.getSelectedItem();
-        if (aiOption != null) {
-            this.color = aiOption.getDefaultSquare().getColor();
-            setTextColor();
-        } else {
-            this.color = Color.WHITE;
-            this.textColor = Color.BLACK;
-        }
     }
 }

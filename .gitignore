@@ -5,5 +5,7 @@
 /out
 /target
 /target/*
+*.DS_Store
+leaderboard.db
 
 !out/artifacts/SquareGame_jar/SquareGame.jar
