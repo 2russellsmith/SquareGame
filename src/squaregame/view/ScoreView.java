@@ -77,7 +77,7 @@ public class ScoreView extends JPanel {
     public void setColor(Player player) {
         Arrays.stream(this.getComponents()).forEach(comp -> {
             comp.setForeground(player.getTextColor());
-            comp.setPreferredSize(new Dimension(2, 20));
+            comp.setPreferredSize(new Dimension(2, 50));
             comp.setFont(GLOBAL_FONT);
         });
     }

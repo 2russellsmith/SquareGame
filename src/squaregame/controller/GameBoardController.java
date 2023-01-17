@@ -324,7 +324,7 @@ public class GameBoardController {
         setScoreBoard();
         gameState.getPlayerList().stream().filter(Player::isPlaying).forEach(p -> {
             final Score score = gameState.getScoreBoard().get(p);
-            GLOBAL_FONT = new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), this.mainPanel.getHeight() / 60);
+            GLOBAL_FONT = new Font(GLOBAL_FONT.getFontName(), GLOBAL_FONT.getStyle(), this.mainPanel.getHeight() / 40);
             this.playerViewMap.get(p).setPlayerName(p.getName());
             this.playerViewMap.get(p).setDebug(this.debugEnabled);
             this.playerViewMap.get(p).setScore(score.getScore(), this.debugEnabled);
