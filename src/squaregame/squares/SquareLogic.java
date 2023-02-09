@@ -40,8 +40,6 @@ public abstract class SquareLogic {
         return new Color(r, g, b);
     }
 
-    ;
-
     public SquareAction move(Direction direction) {
         return SquareAction.move(direction, this);
     }
