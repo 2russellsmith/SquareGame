@@ -56,12 +56,12 @@ public class AISelectorPanel extends JPanel implements ActionListener {
                     JScrollPane scrollPane = new JScrollPane(aiSelectorComboBox);
                     scrollPane.getViewport().setOpaque(false);
                     scrollPane.setOpaque(false);
-                    scrollPane.setVisible(false);
-                    try {
-                        add(new AddPlayerButton(scrollPane, p), c);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    scrollPane.setVisible(false);
+//                    try {
+//                        add(new AddPlayerButton(scrollPane, p), c);
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
                     add(scrollPane, c);
                 });
     }
@@ -74,7 +74,7 @@ public class AISelectorPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if ("Leaderboard".equals(e.getActionCommand())) {
             final ArrayList<Integer> aiOptions = new ArrayList<>();
-            for (int i = 1; i < this.gameBoardController.getGameState().getAiOptions().size(); i++) {
+            for (int i = 0; i < this.gameBoardController.getGameState().getAiOptions().size(); i++) {
                 aiOptions.add(i);
             }
             Collections.shuffle(aiOptions);

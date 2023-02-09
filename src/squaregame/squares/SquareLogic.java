@@ -1,5 +1,6 @@
 package squaregame.squares;
 
+import lombok.NonNull;
 import squaregame.model.Direction;
 import squaregame.model.SquareAction;
 import squaregame.model.SquareView;
@@ -16,6 +17,7 @@ public abstract class SquareLogic {
      *             view.get(2) = NE, etc}. It will always be size 8; It will be null if the square is empty.
      * @return {@link SquareAction} You have 4 different actions a square can take (Move, attack, replicate, wait}
      */
+    @NonNull
     public abstract SquareAction run(SquareView view);
 
     /**

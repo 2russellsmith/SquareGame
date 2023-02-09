@@ -20,6 +20,7 @@ public class GameState {
     private final Leaderboard leaderboard;
     private final Map<Player, Score> scoreBoard;
     private int roundNumber;
+    private int victoryLap;
     private int totalRounds = 3000;
     private Map<Player, Set<Player>> whoPlayersBeat;
     private boolean freeForAll;
@@ -96,6 +97,7 @@ public class GameState {
 
     public void reset() {
         roundNumber = 0;
+        victoryLap = 0;
         this.whoPlayersBeat = new HashMap<>();
         getPlayerList().forEach(p -> scoreBoard.put(p, new Score()));
     }
@@ -117,7 +119,13 @@ public class GameState {
     }
 
     public boolean gameOver() {
-        return totalRounds < this.roundNumber || this.someoneWon();
+        if (this.someoneWon() && this.victoryLap == 0) {
+            this.victoryLap = this.roundNumber + 200;
+        }
+        if (this.someoneWon()) {
+            return this.victoryLap < this.roundNumber;
+        }
+        return this.totalRounds < this.roundNumber ;
     }
 
     public boolean isFreeForAll() {

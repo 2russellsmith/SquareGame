@@ -32,7 +32,7 @@ public class GameBoardPanel extends JPanel {
             for (int j = 0; j < this.gameBoardController.getGameBoard().getBoardSize(); j++) {
                 if (this.gameBoardController.getGameBoard().get(i, j) != null) {
                     g2.setColor(this.gameBoardController.getGameBoard().get(i, j).getPlayer().getColor());
-                    g2.drawRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                    g2.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 }
             }
         }
