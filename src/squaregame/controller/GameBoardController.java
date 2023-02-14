@@ -245,39 +245,34 @@ public class GameBoardController {
     }
 
     public void executeSquareActions(Set<MagicSquare> magicSquares, GameBoard updatedGameBoard, Set<Location> squareCollisions, Set<KillEvent> squareKills, Map<Player, Score> scoreboard) {
-        try(ForkJoinPool myPool = new ForkJoinPool(8)) {
-            myPool.submit(() ->
-                magicSquares.parallelStream().forEach(squareTakingTurn -> {
-                    final SquareAction squareAction = squareTakingTurn.getSquareLogic()
-                            .run(new SquareView(this.gameBoard.getView(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY()),
-                                    squareTakingTurn.getPlayer(), squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(),
-                                    new PlayerAllowedMetadata(this.gameBoard.getBoardSize(), this.gameState.getRoundNumber(), new HashMap<>(scoreboard))));
-                    switch (squareAction.getAction()) {
-                        case ATTACK:
-                            final Location attackLocation = squareTakingTurn.getLocation();
-                            checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), attackLocation));
-                            squareKills.add(new KillEvent(squareTakingTurn.getPlayer(), new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize())));
-                            break;
-                        case MOVE:
-                            final Location moveLocation = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
-                            checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), moveLocation));
-                            break;
-                        case REPLICATE:
-                            final Location replicateLocation1 = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
-                            final Location replicateLocation2 = squareTakingTurn.getLocation();
-                            this.gameState.getScoreBoard().get(squareTakingTurn.getPlayer()).addGenerated();
-                            checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getReplicated(), replicateLocation1, INACTIVE_COUNT));
-                            checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), replicateLocation2, INACTIVE_COUNT));
-                            break;
-                        case WAIT:
-                            final Location waitLocation = squareTakingTurn.getLocation();
-                            checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), waitLocation));
-                    }
-                })
-            ).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        magicSquares.forEach(squareTakingTurn -> {
+            final SquareAction squareAction = squareTakingTurn.getSquareLogic()
+                    .run(new SquareView(this.gameBoard.getView(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY()),
+                            squareTakingTurn.getPlayer(), squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(),
+                            new PlayerAllowedMetadata(this.gameBoard.getBoardSize(), this.gameState.getRoundNumber(), new HashMap<>(scoreboard))));
+            switch (squareAction.getAction()) {
+                case ATTACK -> {
+                    final Location attackLocation = squareTakingTurn.getLocation();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), attackLocation));
+                    squareKills.add(new KillEvent(squareTakingTurn.getPlayer(), new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize())));
+                }
+                case MOVE -> {
+                    final Location moveLocation = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), moveLocation));
+                }
+                case REPLICATE -> {
+                    final Location replicateLocation1 = new Location(squareTakingTurn.getLocation().getX(), squareTakingTurn.getLocation().getY(), squareAction.getDirection(), this.gameBoard.getBoardSize());
+                    final Location replicateLocation2 = squareTakingTurn.getLocation();
+                    this.gameState.getScoreBoard().get(squareTakingTurn.getPlayer()).addGenerated();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getReplicated(), replicateLocation1, INACTIVE_COUNT));
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), replicateLocation2, INACTIVE_COUNT));
+                }
+                case WAIT -> {
+                    final Location waitLocation = squareTakingTurn.getLocation();
+                    checkForCollisions(squareCollisions, updatedGameBoard, new MagicSquare(squareTakingTurn.getPlayer(), squareAction.getSquareLogic(), waitLocation));
+                }
+            }
+        });
     }
 
     public void checkForCollisions(Set<Location> collisions, GameBoard updatedGameBoard, MagicSquare magicSquare) {
@@ -311,6 +306,7 @@ public class GameBoardController {
         } else {
             this.timerSpeed *= 10;
         }
+        this.buttonPanel.setTimerSpeedButtonImage(this.timerSpeed);
         this.timer = new Timer(this.timerSpeed, e -> runRound());
         this.timer.start();
     }

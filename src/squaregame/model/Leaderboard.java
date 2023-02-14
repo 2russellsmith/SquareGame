@@ -55,7 +55,7 @@ public class Leaderboard {
 
     public void addScore(String player, int mmr) {
         aiOptions.stream().filter(Objects::nonNull).forEach(aiOption -> {
-            if (aiOption.getId().equals(player)) {
+            if (aiOption.getId().equals(player) && (this.scoreboard.get(player) + mmr) > 0) {
                 this.scoreboard.put(aiOption.getId(), this.scoreboard.get(player) + mmr);
                 final String insertsql = "UPDATE " + this.tableName + " set MMR = " + this.scoreboard.get(player) + " where ID= \"" + player + "\";";
                 try {
@@ -64,7 +64,6 @@ public class Leaderboard {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Update to " + this.tableName);
             }
         });
     }

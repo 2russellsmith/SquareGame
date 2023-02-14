@@ -11,7 +11,7 @@ public class SquareView {
     private final int col;
     private final PlayerAllowedMetadata playerAllowedMetadata;
 
-    public SquareView(List<Player> view, Player player, int row, int col, PlayerAllowedMetadata playerAllowedMetadata) {
+    public SquareView(List<Player> view, Player player, int col, int row, PlayerAllowedMetadata playerAllowedMetadata) {
         this.view = view;
         this.player = player;
         this.row = row;

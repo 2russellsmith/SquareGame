@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ButtonPanel extends JPanel implements ActionListener {
     public JButton startButton, stopButton, resetButton, leaderboardButton, timerSpeedButton, debugModeButton;
@@ -21,7 +22,7 @@ public class ButtonPanel extends JPanel implements ActionListener {
         this.setBackground(new Color(105, 166, 201));
         startButton = createButton("src/squaregame/play.png", "StartGame", "Starts the game");
         stopButton = createButton("src/squaregame/stop.png", "StopGame", "Stops the game");
-        timerSpeedButton = createButton("src/squaregame/speed.png", "TimerSpeed", "Changes the timer speed");
+        timerSpeedButton = createButton("src/squaregame/speed10.png", "TimerSpeed", "Changes the timer speed");
         resetButton = createButton("src/squaregame/reset.png", "ResetGame", "Resets the game");
         leaderboardButton = createButton("src/squaregame/leaderboardMode.png", "Leaderboard", "Starts Leaderboard Mode");
         debugModeButton = createButton("src/squaregame/debug.png", "DebugMode", "Toggle Debug Mode");
@@ -85,5 +86,14 @@ public class ButtonPanel extends JPanel implements ActionListener {
             this.gameBoardController.updateLeaderboards();
         }
     }
+
+    public void setTimerSpeedButtonImage(int timerSpeed) {
+        try {
+            Image img = ImageIO.read(Objects.requireNonNull(getClass().getResource("/squaregame/speed" + timerSpeed + ".png")));
+            this.timerSpeedButton.setIcon(new ImageIcon(img));
+        } catch(IOException e){
+            throw new RuntimeException(e);
+        }
+}
 
 }

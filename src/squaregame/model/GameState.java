@@ -120,7 +120,7 @@ public class GameState {
 
     public boolean gameOver() {
         if (this.someoneWon() && this.victoryLap == 0) {
-            this.victoryLap = this.roundNumber + 200;
+            this.victoryLap = this.roundNumber + 50;
         }
         if (this.someoneWon()) {
             return this.victoryLap < this.roundNumber;
